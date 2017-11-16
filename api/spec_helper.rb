@@ -7,8 +7,6 @@ Dir.glob(project_root + '/md3_api/http/*.rb') { |file| require_relative file }
 # Create a database connection
 Db.connect
 
-byebug
-
 # This is boilerplate rspec configuration
 RSpec.configure do |config|
   config.mock_with :rspec

@@ -5,4 +5,9 @@ module Md3ApiHttp
     res = HTTParty.get('https://local.bullioncapital.com/md3api/contracts')
     res['data']
   end
+
+  def self.products
+    res = HTTParty.get('https://local.bullioncapital.com/md3api/products')
+    res['data']
+  end
 end
