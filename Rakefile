@@ -1,6 +1,6 @@
 require 'require_all'
 
-task :default => [:all]
+task default: [:all]
 
 task :lint do
   rubocop api application database
