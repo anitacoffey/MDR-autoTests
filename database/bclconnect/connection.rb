@@ -1,2 +1,6 @@
-class MysqlActiveRecord < ActiveRecord::Base
+module Db
+  module Bclconnect
+    class MysqlActiveRecord < ActiveRecord::Base
+    end
+  end
 end

@@ -1,0 +1,17 @@
+# File Loads
+require 'byebug'
+require_relative '../database/database.rb'
+project_root = File.dirname(File.absolute_path(__FILE__))
+Dir.glob(project_root + '/md3_api/http/*.rb') { |file| require_relative file }
+
+# Create a database connection
+Db.connect
+
+byebug
+
+# This is boilerplate rspec configuration
+RSpec.configure do |config|
+  config.mock_with :rspec
+  config.expect_with :rspec
+  config.raise_errors_for_deprecations!
+end

@@ -1,23 +1,20 @@
-require 'require_all'
+require 'rubygems'
 
 task default: [:all]
 
-task :lint do
-  rubocop api application database
-end
-
-task :load_all do
-  require_all 'apis'
-  require_all 'applications'
-  require_rel 'databases/database.rb'
-end
-
 task :metaldesk do
-  Rake::Task[:lint].execute
-  Rake::Task[:load_all].execute
+  sh 'rubocop application database'
   puts 'hurray'
 end
 
+task :apis do
+  sh 'rubocop api database'
+  sh 'rspec api'
+end
+
 task :all do
+  puts 'Execution API Tests'
+  Rake::Task[:apis].execute
+  puts 'Executing MetalDesk Tests'
   Rake::Task[:metaldesk].execute
 end

@@ -10,6 +10,9 @@ Run `bundle install`
  * Some system dependencies will be required. i.e. Mysql and Postgres client libraries.
  * A failed bundle install should prompt the requirements
 
+Ensure your PATH is extended to the correct ruby gem location in ~/.bash_profile by appending the following line
+`export PATH="/home/sam/.rbenv/versions/2.3.0/bin:$PATH"`
+
 ## Running the tests
 
 Run `rake test`
