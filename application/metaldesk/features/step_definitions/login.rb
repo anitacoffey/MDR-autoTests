@@ -1,10 +1,10 @@
 Given('I login with username and password in the $user_data') do |user_data|
   user = YamlLoader.user_info(user_data)
 
-  login_page = LoginPage.new
-  login_page.set_username(user['username'])
-  login_page.set_password(user['password'])
-  login_page.submit_login
+  page_elements = LoginPage.new
+  page_elements.set_username(user['username'])
+  page_elements.set_password(user['password'])
+  page_elements.submit_login
 
   Watir::Wait.until(timeout: 10) { $browser.text.downcase.include? 'trade' }
 
@@ -12,8 +12,8 @@ Given('I login with username and password in the $user_data') do |user_data|
 end
 
 Then('I logout from MetalDesk') do
-  login_page = LoginPage.new
-  login_page.submit_logout
+  page_elements = LoginPage.new
+  page_elements.submit_logout
 end
 
 Then('I exit the browser') do
