@@ -11,7 +11,7 @@ class LoginPage
   end
 
   def insert_password(password)
-    @username_field.set(password)
+    @password_field.set(password)
   end
 
   def submit_login

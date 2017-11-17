@@ -9,13 +9,12 @@ And('I navigate to the Liquidity screen as {string}') do |user_data|
   end
 
   Watir::Wait.until(timeout: 5) { $browser.span(text: 'Liquidity').exists? }
-  UIElements_Main.get_navigate_elements($browser, 'LIQUIDITY')
+  NavigationPage.new.to_liquidity_page
   Watir::Wait.until(timeout: 5) { $browser.h1(text: 'Liquidity').exists? }
 end
 
 And('I filter by a random hub on the Liquidity screen') do
-  index = rand(1..2)
-
+  index = 1
   page_elements = LiquidityPage.new
   page_elements.hub_filter.click
   page_elements.filter_hub(0).click
@@ -23,18 +22,18 @@ And('I filter by a random hub on the Liquidity screen') do
 end
 
 And('I select a product') do
-  index = rand(1..5)
+  index = 5
   page_elements = LiquidityPage.new
   page_elements.select_product(index).click
 end
 
-And('I place multiple spread orders for a {int} and {int}') do |qty, value|
+And('I place multiple spread orders') do
   [0, 1, 2].each do |product_index|
-    select_product(product_index)
-    place_order('bid', 'value', qty, value)
-    verify_order_placed('bid', 'value', qty, value)
-    place_order('offer', 'value', 'random', qty, value)
-    verify_order_placed('offer', 'value', qty, -value)
+    page_elements.select_product(product_index).click
+    place_order('bid', 'value', 6, 2)
+    verify_order_placed('bid', 'value', 6, 2)
+    place_order('offer', 'value', 'random', 1, -2)
+    verify_order_placed('offer', 'value', 1, -2)
   end
 end
 
@@ -51,7 +50,7 @@ And('I provide liquidity for all silver contracts') do
   select_metal('silver') # uncheck gold
   sleep 1 # needed
   [6, 5, 4, 3, 2, 1, 0].each do |product_index|
-    select_product(product_index)
+    page_elements.select_product(product_index).click
     place_order('bid', 'value', 100, 1)
     verify_order_placed('bid', 'value', 100, 1)
     place_order('offer', 'value', 100, -1)
@@ -70,7 +69,7 @@ end
 
 Then('There are no more orders visible') do
   [0, 1].each do |product_index|
-    select_product(product_index)
+    page_elements.select_product(product_index).click
     verify_no_depth('bid')
     verify_no_depth('offer')
   end
@@ -118,8 +117,10 @@ end
 
 # these are the two vars from the data grid
 Then('The {string} {string} {int} {int} order is not visible') do |type, unit, qty, value|
+  order_type = bid_or_offer(type)
+  length = find_the_depth(order_type)
   # traverse the entire depth collection to find the order qty and value you cancelled above
-  flag = traverse_depth(type, unit, qty, value)
+  flag = traverse_depth(length, type, unit, qty, value)
   # if order found, raise error, else success message
   raise 'Order cancellation not verified' if flag == 1
 end
@@ -145,6 +146,8 @@ When('I place and update a {string} {string} {int} {int} order') do |type, unit,
     break
   end
 
+  update_value = value + 1
+
   # input new values and confirm update
   page_elements.review_update_btn.wait_until_present
   page_elements.value_input.to_subtype.clear
@@ -159,24 +162,24 @@ When('I place and update a {string} {string} {int} {int} order') do |type, unit,
   raise 'Correct order not visible' if flag != 1
 end
 
-Then('The $type $unit order is updated') do |type, unit, qty, value|
+Then('The {string} {string} {int} {int} order is updated') do |type, unit, qty, value|
   # to verify order has been updated
   # find the depth
   order_type = bid_or_offer(type)
-  find_the_depth(order_type)
+  length = find_the_depth(order_type)
 
   # traverse the entire depth collection to find the order qty and value you updated above
-  flag = traverse_depth(type, unit, qty, value)
+  flag = traverse_depth(length, type, unit, qty, value)
 
   # if order updated, then display success message, else raise error
   raise 'Order updation not verified' if flag != 1
 end
 
-When('I place a {string} {string} {int} {int} order in active hours') do |type, unit, _qty, value|
+When('I place a {string} {string} {int} {int} order in active hours') do |type, unit, qty, value|
   page_elements = LiquidityPage.new
 
   # input to form
-  input_place_order(type, unit, quantity, value)
+  input_place_order(type, unit, qty, value)
   page_elements.active_hours_btn.click
 
   # input open and close times and time zone
@@ -190,7 +193,7 @@ When('I place a {string} {string} {int} {int} order in active hours') do |type, 
   confirm_order
 end
 
-Then('The {string} {string} {int} {int} order is visible in active hours') do |type, unit, qty, _value|
+Then('The {string} {string} {int} {int} order is visible in active hours') do |type, unit, qty, value|
   page_elements = LiquidityPage.new
 
   # verify the active order placed
@@ -206,7 +209,7 @@ Then('The {string} {string} {int} {int} order is visible in active hours') do |t
     active_value_text = page_elements.active_value(order_type, itr).text
 
     ts = '09:00 - 17:00 UTC+08:00'
-    if order_qty.to_i == qty && order_value.to_f == value_active && order_value_unit == display_unit && active_value_text == ts
+    if order_qty.to_i == qty && order_value.to_f == value && order_value_unit == display_unit && active_value_text == ts
       flag += 1
       break
     end
@@ -216,11 +219,11 @@ Then('The {string} {string} {int} {int} order is visible in active hours') do |t
   raise 'Correct order not visible' if flag != 1
 end
 
-When('I place and cancel a {string} {string} {int} {int} order in active hours') do |type, unit, _qty, value|
+When('I place and cancel a {string} {string} {int} {int} order in active hours') do |type, unit, qty, value|
   page_elements = LiquidityPage.new
 
   # input to form
-  input_place_order(type, unit, quantity, value)
+  input_place_order(type, unit, qty, value)
   page_elements.active_hours_btn.click
 
   # input open and close times and time zone
@@ -243,7 +246,7 @@ When('I place and cancel a {string} {string} {int} {int} order in active hours')
   length.times do |itr|
     order_qty, order_value, order_value_unit = iterate_to_find_order(order_type, itr)
     display_unit = percent_or_value(unit)
-    next if order_qty.to_i == quantity && order_value.to_f == value && order_value_unit == display_unit
+    next if order_qty.to_i == qty && order_value.to_f == value && order_value_unit == display_unit
     flag += 1
     page_elements.cancel_btn(order_type, itr).click
     break
@@ -260,14 +263,14 @@ When('I place and cancel a {string} {string} {int} {int} order in active hours')
   page_elements.select_product(5).click
 end
 
-Then('The {string} {string} {int} {int} order is not visible in active hours') do |type, unit, _qty, value|
+Then('The {string} {string} {int} {int} order is not visible in active hours') do |type, unit, qty, value|
   # to verify the order has been cancelled
   # find the depth
   order_type = bid_or_offer(type)
-  find_the_depth(order_type)
+  length = find_the_depth(order_type)
 
   # traverse the entire depth collection to find the order qty and value you cancelled above
-  flag = traverse_depth(type, unit, quantity, value)
+  flag = traverse_depth(length, type, unit, qty, value)
 
   # if order found, raise error, else success message
   raise 'Order cancellation not verified' if flag == 1
@@ -308,8 +311,8 @@ def verify_order_placed(type, unit, quantity, value)
   raise 'Correct order not visible' if flag != 1
 end
 
-def traverse_depth(type, unit, quantity, value)
-  Guard.check_parameters([type, unit, quantity, value])
+def traverse_depth(length, type, unit, quantity, value)
+  Guard.check_parameters([length, type, unit, quantity, value])
 
   flag = 0
   length.times do |itr|
@@ -369,6 +372,7 @@ end
 
 # helper method to find the depth values
 def iterate_to_find_order(order_type, itr)
+  Guard.check_parameters([order_type, itr])
   page_elements = LiquidityPage.new
   page_elements.depth_container.wait_until_present
   page_elements.depth_qty(order_type, itr).wait_until_present
@@ -396,7 +400,7 @@ end
 
 # helper method to input data for new order
 def input_place_order(type, unit, qty, val)
-  Guard.check_parameters([order_type])
+  Guard.check_parameters([type, unit, qty, val])
   page_elements = LiquidityPage.new
   offer_click_or_not(type)
   value_click_or_not(unit)

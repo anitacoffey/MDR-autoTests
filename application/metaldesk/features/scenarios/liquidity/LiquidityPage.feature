@@ -3,10 +3,10 @@ Feature: A liquidity provider can place, cancel and update spread orders on the 
 
 Scenario Outline: create and verify a new order
   Given I login with username and password in the "<data_set>"
-  And I navigate to the Liquidity screen
+  And I navigate to the Liquidity screen as "<data_set>"
   And I select a product
-  When I place a <type> <unit> <qty> <value> order
-  Then The <type> <unit> <qty> <value> order is visible
+  When I place a "<type>" "<unit>" <qty> <value> order
+  Then The "<type>" "<unit>" <qty> <value> order is visible
   And I exit the browser
   @mm
   Examples:MM
@@ -16,10 +16,10 @@ Scenario Outline: create and verify a new order
 
 Scenario Outline: create and cancel a new order and verify the order has been cancelled
   Given I login with username and password in the "<data_set>"
-  And I navigate to the Liquidity screen
+  And I navigate to the Liquidity screen as "<data_set>"
   And I select a product
-  When I place and cancel a <type> <unit> <qty> <value> order
-  Then The <type> <unit> <qty> <value> order is not visible
+  When I place and cancel a "<type>" "<unit>" <qty> <value> order
+  Then The "<type>" "<unit>" <qty> <value> order is not visible
   And I exit the browser
   @mm
   Examples:MM
@@ -29,10 +29,10 @@ Scenario Outline: create and cancel a new order and verify the order has been ca
 
 Scenario Outline: create and update a new order and verify the order has been updated
   Given I login with username and password in the "<data_set>"
-  And I navigate to the Liquidity screen
+  And I navigate to the Liquidity screen as "<data_set>"
   And I select a product
-  When I place and update a <type> <unit> <qty> <value> order
-  Then The <type> <unit> <qty> <value> order is updated
+  When I place and update a "<type>" "<unit>" <qty> <value> order
+  Then The "<type>" "<unit>" <qty> <value> order is updated
   And I exit the browser
   @mm
   Examples:MM
@@ -42,10 +42,10 @@ Scenario Outline: create and update a new order and verify the order has been up
 
 Scenario Outline: create and verify a new order with active hours
   Given I login with username and password in the "<data_set>"
-  And I navigate to the Liquidity screen
+  And I navigate to the Liquidity screen as "<data_set>"
   And I select a product
-  When I place a <type> <unit> <qty> <value> order in active hours
-  Then The <type> <unit> <qty> <value> order is visible in active hours
+  When I place a "<type>" "<unit>" <qty> <value> order in active hours
+  Then The "<type>" "<unit>" <qty> <value> order is visible in active hours
   And I exit the browser
   @mm
   Examples:MM
@@ -55,10 +55,10 @@ Scenario Outline: create and verify a new order with active hours
 
 Scenario Outline: create and cancel a new order with active hours and verify the order has been cancelled
   Given I login with username and password in the "<data_set>"
-  And I navigate to the Liquidity screen
+  And I navigate to the Liquidity screen as "<data_set>"
   And I select a product
-  When I place and cancel a <type> <unit> <qty> <value> order in active hours
-  Then The <type> <unit> <qty> <value> order is not visible in active hours
+  When I place and cancel a "<type>" "<unit>" <qty> <value> order in active hours
+  Then The "<type>" "<unit>" <qty> <value> order is not visible in active hours
   And I exit the browser
   @mm
   Examples:MM
@@ -68,7 +68,7 @@ Scenario Outline: create and cancel a new order with active hours and verify the
 
 Scenario Outline: kill all open liquidity orders
   Given I login with username and password in the "<data_set>"
-  And I navigate to the Liquidity screen
+  And I navigate to the Liquidity screen as "<data_set>"
   And I place multiple spread orders
   When I click the kill all orders button
   Then There are no more orders visible
