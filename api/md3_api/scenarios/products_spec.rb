@@ -1,4 +1,4 @@
-require_relative '../../spec_helper.rb'
+require_relative '../spec_helper.rb'
 
 describe 'Products' do
   it 'The number of products returned by the api matches products in the database' do

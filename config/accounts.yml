@@ -1,0 +1,216 @@
+CCP_TestData:
+  accounttype: CCP
+  tradeforclient: NA
+  clientcantrade: NA
+  username: CCP
+  password: CCP
+  client: NA
+  client_hin: NA
+  hin: CP000002
+PB2_TestData1:
+  accounttype: MM
+  tradeforclient: NA
+  clientcantrade: NA
+  username: PB2
+  password: PB2
+  client: NA
+  client_hin: NA
+  hin: PB000009
+PB4_TestData1:
+  accounttype: MM
+  tradeforclient: NA
+  clientcantrade: NA
+  username: PB4
+  password: PB4
+  client: NA
+  client_hin: NA
+  hin: PB000016
+IB1_TestData1:
+  accounttype: IB-TRADE
+  tradeforclient: YES
+  clientcantrade: YES
+  username: IB1
+  password: IB1
+  client: PC1 PTY LTD (PC000005)
+  client_hin: PC000005
+  hin: IB000004
+IB2_TestData1:
+  accounttype: IB-NOTRADE
+  tradeforclient: NA
+  clientcantrade: YES
+  username: IB2
+  password: IB2
+  client: NA
+  client_hin: NA
+  hin: IB000006
+IB3_TestData1:
+  accounttype: IB-TRADE
+  tradeforclient: YES
+  clientcantrade: YES
+  username: IB3
+  password: IB3
+  client: PC4 PTY LTD (PC000012)
+  client_hin: PC000012
+  hin: IB000011
+IB4_TestData1:
+  accounttype: IB-NOTRADE
+  tradeforclient: NA
+  clientcantrade: YES
+  username: IB4
+  password: IB4
+  client: NA
+  client_hin: NA
+  hin: IB000013
+PB1_TestData1:
+    accounttype: PB
+    tradeforclient: YES
+    clientcantrade: YES
+    username: PB1
+    password: PB1
+    client: PC1 PTY LTD (PC000005)
+    client_hin: PC000005
+    hin: PB000003
+PB1_TestData2:
+    accounttype: PB
+    tradeforclient: YES
+    clientcantrade: YES
+    username: PB1
+    password: PB1
+    client: PC2 PTY LTD (PC000007)
+    client_hin: PC000007
+    hin: PB000003
+PB1_TestData3:
+    accounttype: PB
+    tradeforclient: YES
+    clientcantrade: YES
+    username: PB1
+    password: PB1
+    client: PC3 PTY LTD (PC000008)
+    client_hin: PC000008
+    hin: PB000003
+PB1_TestData4:
+    accounttype: PB
+    tradeforclient: YES
+    clientcantrade: YES
+    username: PB1
+    password: PB1
+    client: IB1 PTY LTD (PC000004)
+    client_hin: PC000004
+    hin: PB000003
+PB1_TestData5:
+    accounttype: PB
+    tradeforclient: YES
+    clientcantrade: NA
+    username: PB1
+    password: PB1
+    client: IB2 PTY LTD (PC000006)
+    client_hin: PC000006
+    hin: PB000003
+PB3_TestData1:
+    accounttype: PB
+    tradeforclient: YES
+    clientcantrade: YES
+    username: PB3
+    password: PB3
+    client: PC4 PTY LTD (PC000012)
+    client_hin: PC000012
+    hin: PB000010
+PB3_TestData2:
+    accounttype: PB
+    tradeforclient: YES
+    clientcantrade: YES
+    username: PB3
+    password: PB3
+    client: PC5 PTY LTD (PC000014)
+    client_hin: PC000014
+    hin: PB000010
+PB3_TestData3:
+    accounttype: PB
+    tradeforclient: YES
+    clientcantrade: YES
+    username: PB3
+    password: PB3
+    client: PC6 PTY LTD (PC000015)
+    client_hin: PC000015
+    hin: PB000010
+PB3_TestData4:
+    accounttype: PB
+    tradeforclient: YES
+    clientcantrade: NA
+    username: PB3
+    password: PB3
+    client: IB3 PTY LTD (IB000011)
+    client_hin: IB000011
+    hin: PB000010
+PB3_TestData5:
+    accounttype: PB
+    tradeforclient: YES
+    clientcantrade: NA
+    username: PB3
+    password: PB3
+    client: IB4 PTY LTD (IB000013)
+    client_hin: IB000013
+    hin: PB000010
+PB3_TestData6:
+    accounttype: PB
+    tradeforclient: YES
+    clientcantrade: YES
+    username: PB3
+    password: PB3
+    client: House
+    client_hin: PB000010
+    hin: PB000010
+PC1_TestData1:
+    accounttype: PC_Individual
+    tradeforclient: NA
+    clientcantrade: NA
+    username: PC1
+    password: PC1
+    client: NA
+    client_hin: NA
+    hin: PC000005
+PC2_TestData1:
+    accounttype: PC_Individual
+    tradeforclient: NA
+    clientcantrade: NA
+    username: PC2
+    password: PC2
+    client: NA
+    client_hin: NA
+    hin: PC000007
+PC3_TestData1:
+    accounttype: PC_Individual
+    tradeforclient: NA
+    clientcantrade: NA
+    username: PC3
+    password: PC3
+    client: NA
+    client_hin: NA
+    hin: PC000008
+PC4_TestData1:
+    accounttype: PC_Individual
+    tradeforclient: NA
+    clientcantrade: NA
+    username: PC4
+    password: PC4
+    client: NA
+    client_hin: NA
+    hin: PC000012
+PC5_TestData1:
+    accounttype: PC_Individual
+    tradeforclient: NA
+    clientcantrade: NA
+    username: PC5
+    password: PC5
+    client: NA
+    client_hin: NA
+    hin: PC000014
+PC6_TestData1:
+    accounttype: PC_Individual
+    tradeforclient: NA
+    clientcantrade: NA
+    username: PC6
+    password: PC6
+    client: NA
+    client_hin: NA
+    hin: PC000015

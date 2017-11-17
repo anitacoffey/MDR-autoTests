@@ -7,14 +7,14 @@ task :metaldesk do
   puts 'hurray'
 end
 
-task :apis do
+task :md3api do
   sh 'rubocop api database'
-  sh 'rspec api'
+  sh 'cd api && rspec md3_api'
 end
 
 task :all do
   puts 'Execution API Tests'
-  Rake::Task[:apis].execute
+  Rake::Task[:md3api].execute
   puts 'Executing MetalDesk Tests'
   Rake::Task[:metaldesk].execute
 end

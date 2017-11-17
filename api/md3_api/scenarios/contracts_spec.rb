@@ -1,4 +1,4 @@
-require_relative '../../spec_helper.rb'
+require_relative '../spec_helper.rb'
 
 describe 'Contracts' do
   it 'The number of contracts returned by the api matches contracts in the database' do
