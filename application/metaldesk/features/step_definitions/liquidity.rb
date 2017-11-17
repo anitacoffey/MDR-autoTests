@@ -4,13 +4,13 @@
 And('I navigate to the Liquidity screen as $user_data') do |user_data|
   user = YamlLoader.user_info(user_data)
 
-  if user['accounttype'] != 'MM' && $browser.text.downcase.include? 'liquidity'
+  if user['accounttype'] != 'MM' && @browser.text.downcase.include?('liquidity')
     raise "Liquidity tab should not exist for #{user['username']}"
   end
 
-  Watir::Wait.until(timeout: 5) { $browser.span(text: 'Liquidity').exists? }
-  UIElements_Main.get_navigate_elements($browser, 'LIQUIDITY')
-  Watir::Wait.until(timeout: 5) { $browser.h1(text: 'Liquidity').exists? }
+  Watir::Wait.until(timeout: 5) { @browser.span(text: 'Liquidity').exists? }
+  UIElements_Main.get_navigate_elements(@browser, 'LIQUIDITY')
+  Watir::Wait.until(timeout: 5) { @browser.h1(text: 'Liquidity').exists? }
 end
 
 And ('I filter by a random hub on the Liquidity screen') do
@@ -39,7 +39,7 @@ And('I place multiple spread orders for a $quantity and $value') do |qty, value|
 end
 
 And('I determine all contracts and place spread orders for these contracts') do
-  contracts = $browser.divs(id: 'autotests__liquidityPage__tradeableContract')
+  contracts = @browser.divs(id: 'autotests__liquidityPage__tradeableContract')
   contracts.each do |element|
     element.click
     place_order('bid', 'value', 100, 2)

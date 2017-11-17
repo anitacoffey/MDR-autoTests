@@ -8,3 +8,7 @@ Lint/Debugger:
   Enabled: false
 Style/FrozenStringLiteralComment:
   Enabled: false
+Metrics/AbcSize:
+  Enabled: false
+Metrics/ClassLength:
+  Enabled: false

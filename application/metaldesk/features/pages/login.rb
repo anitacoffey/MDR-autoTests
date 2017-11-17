@@ -1,16 +1,16 @@
 class LoginPage
   def initialize
-    @username_field = $browser.forms(class: 'bc-form')[1].fieldset.text_field(index: 0)
-    @password_field = $browser.forms(class: 'bc-form')[1].fieldset.text_field(index: 1)
-    @login_button = $browser.forms(class: 'bc-form')[1].nav.button(type: 'submit')
-    @logout_button = $browser.link(id: 'nav-panel-8')
+    @username_field = @browser.forms(class: 'bc-form')[1].fieldset.text_field(index: 0)
+    @password_field = @browser.forms(class: 'bc-form')[1].fieldset.text_field(index: 1)
+    @login_button = @browser.forms(class: 'bc-form')[1].nav.button(type: 'submit')
+    @logout_button = @browser.link(id: 'nav-panel-8')
   end
 
-  def set_username(username)
+  def insert_username(username)
     @username_field.set(username)
   end
 
-  def set_password(password)
+  def insert_password(password)
     @username_field.set(password)
   end
 
