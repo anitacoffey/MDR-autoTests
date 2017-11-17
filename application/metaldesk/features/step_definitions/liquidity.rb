@@ -29,7 +29,7 @@ And('I select a product') do
 end
 
 And('I place multiple spread orders for a $quantity and $value') do |qty, value|
-  [0,1,2].each do |product_index|
+  [0, 1, 2].each do |product_index|
     select_product(product_index)
     place_order('bid', 'value', qty, value)
     verify_order_placed('bid', 'value', qty, value)
@@ -48,16 +48,16 @@ And('I determine all contracts and place spread orders for these contracts') do
 end
 
 And('I provide liquidity for all silver contracts') do
-  select_metal('silver') #uncheck gold
-  sleep 1 #needed
-  [6,5,4,3,2,1,0].each do |product_index|
+  select_metal('silver') # uncheck gold
+  sleep 1 # needed
+  [6, 5, 4, 3, 2, 1, 0].each do |product_index|
     select_product(product_index)
     place_order('bid', 'value', 100, 1)
     verify_order_placed('bid', 'value', 100, 1)
     place_order('offer', 'value', 100, -1)
     verify_order_placed('offer', 'value', 100, -1)
   end
-  select_metal('silver') #check gold back for future tests
+  select_metal('silver') # check gold back for future tests
 end
 
 When('I click the kill all orders button') do
@@ -84,7 +84,7 @@ Then('The $type $unit $quantity $value order is visible') do |type, unit, qty, v
   verify_order_placed(type, unit, qty, value)
 end
 
-When('I place and cancel a $type $unit $qty $value order') do |type, unit, qty, value|
+When('I place and cancel a $type $unit $qty $value order') do |type, unit, _qty, value|
   page_elements = LiquidityPage.new
   place_order(type, unit, quantity, value)
 
@@ -121,7 +121,7 @@ When('I place and cancel a $type $unit $qty $value order') do |type, unit, qty, 
 end
 
 # these are the two vars from the data grid
-Then('The $type $unit $qty $value order is not visible') do |type, unit, qty, value|
+Then('The $type $unit $qty $value order is not visible') do |type, unit, _qty, value|
   # to verify the order has been cancelled
   # find the depth
   order_type = bid_or_offer(type)
@@ -138,7 +138,7 @@ Then('The $type $unit $qty $value order is not visible') do |type, unit, qty, va
   end
 end
 
-When('I place and update a $type $unit $qty $value order') do |type, unit, qty, value|
+When('I place and update a $type $unit $qty $value order') do |type, unit, _qty, value|
   page_elements = LiquidityPage.new
   place_order(type, unit, quantity, value)
 
@@ -177,7 +177,7 @@ When('I place and update a $type $unit $qty $value order') do |type, unit, qty, 
   end
 end
 
-Then('The $type $unit order is updated') do |type, unit, qty, value|
+Then('The $type $unit order is updated') do |type, unit, _qty, value|
   page_elements = LiquidityPage.new
 
   # to verify order has been updated
@@ -196,7 +196,7 @@ Then('The $type $unit order is updated') do |type, unit, qty, value|
   end
 end
 
-When('I place a $type $unit $qty $value order in active hours') do |type, unit, qty, value|
+When('I place a $type $unit $qty $value order in active hours') do |type, unit, _qty, value|
   page_elements = LiquidityPage.new
 
   # input to form
@@ -214,7 +214,7 @@ When('I place a $type $unit $qty $value order in active hours') do |type, unit, 
   confirm_order
 end
 
-Then('The $type $unit $qty $value order is visible in active hours') do |type, unit, qty, value|
+Then('The $type $unit $qty $value order is visible in active hours') do |type, unit, _qty, _value|
   page_elements = LiquidityPage.new
 
   # verify the active order placed
@@ -242,7 +242,7 @@ Then('The $type $unit $qty $value order is visible in active hours') do |type, u
   end
 end
 
-When('I place and cancel a $type $unit $qty $value order in active hours') do |type, unit, qty, value|
+When('I place and cancel a $type $unit $qty $value order in active hours') do |type, unit, _qty, value|
   page_elements = LiquidityPage.new
 
   # input to form
@@ -269,11 +269,10 @@ When('I place and cancel a $type $unit $qty $value order in active hours') do |t
   length.times do |itr|
     order_qty, order_value, order_value_unit = iterate_to_find_order(order_type, itr)
     display_unit = percent_or_value(unit)
-    unless order_qty.to_i == quantity && order_value.to_f == value && order_value_unit == display_unit
-      flag += 1
-      page_elements.cancel_btn(order_type, itr).click
-      break
-    end
+    next if order_qty.to_i == quantity && order_value.to_f == value && order_value_unit == display_unit
+    flag += 1
+    page_elements.cancel_btn(order_type, itr).click
+    break
   end
 
   # confirm cancellation
@@ -291,7 +290,7 @@ When('I place and cancel a $type $unit $qty $value order in active hours') do |t
   page_elements.select_product(5).click
 end
 
-Then('The $type $unit $qty $value order is not visible in active hours') do |type, unit, qty, value|
+Then('The $type $unit $qty $value order is not visible in active hours') do |type, unit, _qty, value|
   # to verify the order has been cancelled
   # find the depth
   order_type = bid_or_offer(type)
