@@ -14,3 +14,6 @@ Metrics/ClassLength:
   Enabled: false
 Metrics/BlockLength:
   Enabled: false
+GlobalVars:
+  AllowedVariables:
+    - $browser

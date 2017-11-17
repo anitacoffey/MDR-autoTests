@@ -11,13 +11,10 @@ Dir.glob(run_context + '../interaction/**/*.rb') { |file| require_relative file 
 # Create a database connection
 Db.connect
 
-ENV['TEST_ENV'] ||= 'uat'
+ENV['TEST_ENV'] ||= 'local'
 ENV['BROWSER'] ||= 'chrome'
-url = YAML.load_file(run_context + '../../../../config/config.yml')[ENV['TEST_ENV']][:url]
-
+url = YAML.load_file(run_context + '/../../../../config/config.yml')[ENV['TEST_ENV']]['url']
 Watir.default_timeout = 10
-MysqlActiveRecord.connection
-PgActiveRecord.connection
 
 # This is run before every test case, so this is where we can reset the DB
 Before do |scenario|
@@ -27,12 +24,12 @@ Before do |scenario|
   puts "Running Scenario: #{feature_name} Testing for: #{example_name[1]}"
 
   # This is the global browser object
-  @browser = ENV['HEADLESS'] ? Watir::Browser.new(:chrome, headless: true) : Watir::Browser.new(:chrome)
-  @browser.goto(url)
-  @browser.window.resize_to 1920, 1200
+  $browser = ENV['HEADLESS'] ? Watir::Browser.new(:chrome, headless: true) : Watir::Browser.new(:chrome)
+  $browser.goto(url)
+  $browser.window.resize_to 1920, 1200
 end
 
 After do |scenario|
   puts scenario.exception.message.to_s if scenario.failed?
-  @browser.quit
+  $browser.quit
 end

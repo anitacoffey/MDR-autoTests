@@ -2,8 +2,7 @@
 Feature: A liquidity provider can place, cancel and update spread orders on the liquidity page
 
 Scenario Outline: create and verify a new order
-  Given I am in the MetalDesk Page
-  And I login with username and password in the "<data_set>"
+  Given I login with username and password in the "<data_set>"
   And I navigate to the Liquidity screen
   And I select a product
   When I place a <type> <unit> <qty> <value> order
@@ -16,8 +15,7 @@ Scenario Outline: create and verify a new order
     |offer |value   |PB2_TestData1|3  |-5   |
 
 Scenario Outline: create and cancel a new order and verify the order has been cancelled
-  Given I am in the MetalDesk Page
-  And I login with username and password in the "<data_set>"
+  Given I login with username and password in the "<data_set>"
   And I navigate to the Liquidity screen
   And I select a product
   When I place and cancel a <type> <unit> <qty> <value> order
@@ -30,8 +28,7 @@ Scenario Outline: create and cancel a new order and verify the order has been ca
     |offer |value   |PB2_TestData1|3  |5    |
 
 Scenario Outline: create and update a new order and verify the order has been updated
-  Given I am in the MetalDesk Page
-  And I login with username and password in the "<data_set>"
+  Given I login with username and password in the "<data_set>"
   And I navigate to the Liquidity screen
   And I select a product
   When I place and update a <type> <unit> <qty> <value> order
@@ -44,8 +41,7 @@ Scenario Outline: create and update a new order and verify the order has been up
     |bid   |value   |PB2_TestData1|3  |-5   |
 
 Scenario Outline: create and verify a new order with active hours
-  Given I am in the MetalDesk Page
-  And I login with username and password in the "<data_set>"
+  Given I login with username and password in the "<data_set>"
   And I navigate to the Liquidity screen
   And I select a product
   When I place a <type> <unit> <qty> <value> order in active hours
@@ -58,8 +54,7 @@ Scenario Outline: create and verify a new order with active hours
     |offer |percent |PB2_TestData1|3  |-2   |
 
 Scenario Outline: create and cancel a new order with active hours and verify the order has been cancelled
-  Given I am in the MetalDesk Page
-  And I login with username and password in the "<data_set>"
+  Given I login with username and password in the "<data_set>"
   And I navigate to the Liquidity screen
   And I select a product
   When I place and cancel a <type> <unit> <qty> <value> order in active hours
@@ -72,8 +67,7 @@ Scenario Outline: create and cancel a new order with active hours and verify the
     |offer |value   |PB2_TestData1|3  |-1   |
 
 Scenario Outline: kill all open liquidity orders
-  Given I am in the MetalDesk Page
-  And I login with username and password in the "<data_set>"
+  Given I login with username and password in the "<data_set>"
   And I navigate to the Liquidity screen
   And I place multiple spread orders
   When I click the kill all orders button
