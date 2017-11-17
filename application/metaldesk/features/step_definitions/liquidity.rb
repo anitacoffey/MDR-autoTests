@@ -13,7 +13,7 @@ And('I navigate to the Liquidity screen as $user_data') do |user_data|
   Watir::Wait.until(timeout: 5) { @browser.h1(text: 'Liquidity').exists? }
 end
 
-And ('I filter by a random hub on the Liquidity screen') do
+And('I filter by a random hub on the Liquidity screen') do
   index = rand(1..2)
 
   page_elements = LiquidityPage.new
@@ -84,9 +84,9 @@ Then('The $type $unit $quantity $value order is visible') do |type, unit, qty, v
   verify_order_placed(type, unit, qty, value)
 end
 
-When('I place and cancel a $type $unit $qty $value order') do |type, unit, _qty, value|
+When('I place and cancel a $type $unit $qty $value order') do |type, unit, qty, value|
   page_elements = LiquidityPage.new
-  place_order(type, unit, quantity, value)
+  place_order(type, unit, qty, value)
 
   # now cancel the above plaved order
   # find the depth
@@ -99,7 +99,7 @@ When('I place and cancel a $type $unit $qty $value order') do |type, unit, _qty,
     order_qty, order_value, order_value_unit = iterate_to_find_order(order_type, itr)
     display_unit = percent_or_value(unit)
 
-    next if order_qty.to_i == quantity && order_value.to_f == value && order_value_unit == display_unit
+    next if order_qty.to_i == qty && order_value.to_f == value && order_value_unit == display_unit
     flag += 1
     page_elements.cancel_btn(order_type, itr).click
     break
@@ -110,37 +110,23 @@ When('I place and cancel a $type $unit $qty $value order') do |type, unit, _qty,
   page_elements.cancel_below_spread_orders_btn.click
 
   # if order was found and set to be cancelled, then display success message, else raise error
-  if flag == 1
-    puts 'Order set to be cancelled'
-  else
-    raise 'Correct order not visible'
-  end
+  raise 'Correct order not visible' if flag != 1
 
   # click again on the product you're working on, so that the depth is indeed refreshed
   page_elements.select_product(5).click
 end
 
 # these are the two vars from the data grid
-Then('The $type $unit $qty $value order is not visible') do |type, unit, _qty, value|
-  # to verify the order has been cancelled
-  # find the depth
-  order_type = bid_or_offer(type)
-  length = find_the_depth(order_type)
-
+Then('The $type $unit $qty $value order is not visible') do |type, unit, qty, value|
   # traverse the entire depth collection to find the order qty and value you cancelled above
-  flag = traverse_depth(type, unit, quantity, value)
-
+  flag = traverse_depth(type, unit, qty, value)
   # if order found, raise error, else success message
-  if flag == 1
-    raise 'Order cancellation not verified'
-  else
-    puts 'Order cancellation verified'
-  end
+  raise 'Order cancellation not verified' if flag == 1
 end
 
-When('I place and update a $type $unit $qty $value order') do |type, unit, _qty, value|
+When('I place and update a $type $unit $qty $value order') do |type, unit, qty, value|
   page_elements = LiquidityPage.new
-  place_order(type, unit, quantity, value)
+  place_order(type, unit, qty, value)
 
   # now update the above placed order
   # find the depth
@@ -153,7 +139,7 @@ When('I place and update a $type $unit $qty $value order') do |type, unit, _qty,
     order_qty, order_value, order_value_unit = iterate_to_find_order(order_type, itr)
     display_unit = percent_or_value(unit)
 
-    next if order_qty.to_i == quantity && order_value.to_f == value && order_value_unit == display_unit
+    next if order_qty.to_i == qty && order_value.to_f == value && order_value_unit == display_unit
     flag += 1
     page_elements.update_btn(order_type, itr).click
     break
@@ -170,30 +156,20 @@ When('I place and update a $type $unit $qty $value order') do |type, unit, _qty,
   page_elements.return_to_order_screen_btn.click
 
   # if order was found and set to be updated, display success message, else raise error
-  if flag == 1
-    puts 'Order set to be updated'
-  else
-    raise 'Correct order not visible'
-  end
+  raise 'Correct order not visible' if flag != 1
 end
 
-Then('The $type $unit order is updated') do |type, unit, _qty, value|
-  page_elements = LiquidityPage.new
-
+Then('The $type $unit order is updated') do |type, unit, qty, value|
   # to verify order has been updated
   # find the depth
   order_type = bid_or_offer(type)
-  length = find_the_depth(order_type)
+  find_the_depth(order_type)
 
   # traverse the entire depth collection to find the order qty and value you updated above
-  flag = traverse_depth(type, unit, quantity, value)
+  flag = traverse_depth(type, unit, qty, value)
 
   # if order updated, then display success message, else raise error
-  if flag == 1
-    puts 'Order updation verified'
-  else
-    raise 'Order updation not verified'
-  end
+  raise 'Order updation not verified' if flag != 1
 end
 
 When('I place a $type $unit $qty $value order in active hours') do |type, unit, _qty, value|
@@ -214,7 +190,7 @@ When('I place a $type $unit $qty $value order in active hours') do |type, unit, 
   confirm_order
 end
 
-Then('The $type $unit $qty $value order is visible in active hours') do |type, unit, _qty, _value|
+Then('The $type $unit $qty $value order is visible in active hours') do |type, unit, qty, _value|
   page_elements = LiquidityPage.new
 
   # verify the active order placed
@@ -228,18 +204,16 @@ Then('The $type $unit $qty $value order is visible in active hours') do |type, u
     order_qty, order_value, order_value_unit = iterate_to_find_order(order_type, itr)
     display_unit = percent_or_value(unit)
     active_value_text = page_elements.active_value(order_type, itr).text
-    if order_qty.to_i == quantity && order_value.to_f == value_active && order_value_unit == display_unit && active_value_text == '09:00 - 17:00 UTC+08:00'
+
+    ts = '09:00 - 17:00 UTC+08:00'
+    if order_qty.to_i == qty && order_value.to_f == value_active && order_value_unit == display_unit && active_value_text == ts
       flag += 1
       break
     end
   end
 
   # if order found, then display success message else raise error
-  if flag == 1
-    puts 'Order successfully placed'
-  else
-    raise 'Correct order not visible'
-  end
+  raise 'Correct order not visible' if flag != 1
 end
 
 When('I place and cancel a $type $unit $qty $value order in active hours') do |type, unit, _qty, value|
@@ -280,11 +254,7 @@ When('I place and cancel a $type $unit $qty $value order in active hours') do |t
   page_elements.cancel_below_spread_orders_btn.click
 
   # if order was found and set to be cancelled, then display success message, else raise error
-  if flag == 1
-    puts 'Order set to be cancelled'
-  else
-    raise 'Correct order not visible'
-  end
+  raise 'Correct order not visible' if flag != 1
 
   # click again on the product you're working on, so that the depth is indeed refreshed
   page_elements.select_product(5).click
@@ -294,17 +264,13 @@ Then('The $type $unit $qty $value order is not visible in active hours') do |typ
   # to verify the order has been cancelled
   # find the depth
   order_type = bid_or_offer(type)
-  length = find_the_depth(order_type)
+  find_the_depth(order_type)
 
   # traverse the entire depth collection to find the order qty and value you cancelled above
   flag = traverse_depth(type, unit, quantity, value)
 
   # if order found, raise error, else success message
-  if flag == 1
-    raise 'Order cancellation not verified'
-  else
-    puts 'Order cancellation verified'
-  end
+  raise 'Order cancellation not verified' if flag == 1
 end
 
 ##################
@@ -339,11 +305,7 @@ def verify_order_placed(type, unit, quantity, value)
   end
 
   # if order found, then display success message, else raise error
-  if flag == 1
-    puts 'Order successfully placed'
-  else
-    raise 'Correct order not visible'
-  end
+  raise 'Correct order not visible' if flag != 1
 end
 
 def traverse_depth(type, unit, quantity, value)
@@ -386,10 +348,11 @@ end
 def offer_click_or_not(type)
   Guard.check_parameters([type])
   page_elements = LiquidityPage.new
-  if type == 'offer'
-    page_elements.offer_btn.wait_until_present
-    page_elements.offer_btn.click
-  end
+
+  return if type != 'offer'
+
+  page_elements.offer_btn.wait_until_present
+  page_elements.offer_btn.click
 end
 
 # helper method when order is based on $ and not %

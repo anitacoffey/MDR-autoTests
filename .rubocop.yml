@@ -1,7 +1,7 @@
 Documentation:
   Enabled: false
 Metrics/LineLength:
-  Max: 120
+  Max: 130
 Metrics/MethodLength:
   Max: 30
 Lint/Debugger:
@@ -11,4 +11,6 @@ Style/FrozenStringLiteralComment:
 Metrics/AbcSize:
   Enabled: false
 Metrics/ClassLength:
+  Enabled: false
+Metrics/BlockLength:
   Enabled: false
