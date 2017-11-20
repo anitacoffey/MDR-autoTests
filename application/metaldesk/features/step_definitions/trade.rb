@@ -59,7 +59,7 @@ end
 
 And(
   'I validate the matched order in the database '\
-  'with order details {int}, {string}, {int}, {string} for user set {string}'
+  'with order details {int}, {string}, {int}, {string} for the user {string}'
 ) do |contract_id, direction, quantity, order_type, user_set|
   user = YamlLoader.user_info(user_set)
   username = user['username']
@@ -122,11 +122,11 @@ end
 # Common Methods #
 ##################
 def find_account_uuid(username)
-  AccountUser.where(username: username)[0].account.uuid
+  Db::Bclconnect::AccountUser.where(username: username)[0].account.uuid
 end
 
 def find_order(account_uuid, contract_id, direction, quantity)
-  Order
+  Db::AbxModules::Order
     .where(
       accountId: account_uuid,
       direction: direction,
@@ -139,36 +139,36 @@ end
 
 def find_order_matches(order_id, direction)
   if direction == 'buy'
-    OrderMatch.where(buyOrderId: order_id)
+    Db::AbxModules::OrderMatch.where(buyOrderId: order_id)
   else
-    OrderMatch.where(sellOrderId: order_id)
+    Db::AbxModules::OrderMatch.where(sellOrderId: order_id)
   end
 end
 
 def find_trade_transaction(order_match_id, account_id)
-  TradeTransaction.where(
+  Db::AbxModules::TradeTransaction.where(
     orderMatchId: order_match_id,
     accountId: account_id
   )[0]
 end
 
 def account_balance_change_with_trade_transaction(trade_transaction_id, account_id, _direction, marketplace_id)
-  account_balance = Balance.where(
+  account_balance = Db::AbxModules::Balance.where(
     marketplaceId: marketplace_id,
     balanceTypeId: 'Account',
     accountId: account_id
   )[0]
 
-  balance_adjustment = BalanceAdjustment.where(
+  balance_adjustment = Db::AbxModules::BalanceAdjustment.where(
     transactionId: trade_transaction_id,
     balanceId: account_balance.id
   )[0]
 
-  account_balance_history_after = BalanceHistory.where(
+  account_balance_history_after = Db::AbxModules::BalanceHistory.where(
     balanceAdjustmentId: balance_adjustment.id
   )[0]
 
-  account_balance_history_all = BalanceHistory
+  account_balance_history_all = Db::AbxModules::BalanceHistory
                                 .where(
                                   balanceId: account_balance.id
                                 )
@@ -186,22 +186,22 @@ def account_balance_change_with_trade_transaction(trade_transaction_id, account_
 end
 
 def holdings_balance_change_with_trade_transaction(trade_transaction_id, account_id, _direction, contract_id)
-  holdings_balance = Balance.where(
+  holdings_balance = Db::AbxModules::Balance.where(
     contractId: contract_id,
     balanceTypeId: 'Holdings',
     accountId: account_id
   )[0]
 
-  balance_adjustment = BalanceAdjustment.where(
+  balance_adjustment = Db::AbxModules::BalanceAdjustment.where(
     transactionId: trade_transaction_id,
     balanceId: holdings_balance.id
   )[0]
 
-  holdings_balance_history_after = BalanceHistory.where(
+  holdings_balance_history_after = Db::AbxModules::BalanceHistory.where(
     balanceAdjustmentId: balance_adjustment.id
   )[0]
 
-  holdings_balance_history_all = BalanceHistory
+  holdings_balance_history_all = Db::AbxModules::BalanceHistory
                                  .where(
                                    balanceId: holdings_balance.id
                                  )
