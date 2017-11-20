@@ -1,8 +1,8 @@
 class LiquidityPage
   def initialize
-    @hub_filter = $browser.div(class: 'md-hubs-input').input(class: 'hubSelect__filterInput')
+    @hub_filter = $browser.input(class: 'hubSelect__filterInput')
     @hub_list = $browser.div(class: 'hubSelect__hubsList')
-    @metal_filter = $browser.div(class: 'md-product-metals')
+    @metal_filter = $browser.nav(class: 'general-selector')
     @product_list = $browser.div(class: 'liquidityPage__leftSidebarContainer').div(class: 'scrollview-content')
     @kill_all_btn = $browser.a(text: 'Kill All Spread Orders')
     @quantity_input = $browser.fieldset(class: 'orderForm__quantitySpinner').input
@@ -22,20 +22,57 @@ class LiquidityPage
     @open_time = $browser.input(placeholder: 'Open Time')
     @close_time = $browser.input(placeholder: 'Close Time')
     @time_zone = $browser.fieldset(class: 'bc-group datetime-combo').div(class: 'selectize-input')
+    @page_title = $browser.h2
+    @sidebar_items = $browser.divs(class: 'liquidityPage__sidebarItem--container')
   end
 
   attr_reader :hub_filter
 
-  def filter_hub(index)
-    @hub_list.ul.li(index: index)
+  def filter_hub(hub_name)
+    @hub_filter.click
+
+    list_items = @hub_list.ul.lis
+    list_items.each do |l|
+      current_classes = l.div.class_name
+
+      unchecked = current_classes.include? 'unchecked'
+      target_hub = l.div.span.text == hub_name
+
+      if unchecked && target_hub
+        l.div.click
+      end
+
+      if !unchecked && !target_hub
+        l.div.click
+      end
+    end
+
+    # Click the page title to unfocus the hub filter
+    @page_title.click
   end
 
-  def filter_metal(index)
-    @metal_filter.nav.a(index: index).span(class: 'square-checkbox')
+  def filter_metal(metal_name)
+    links = @metal_filter.links
+    links.each do |link|
+      unless link.span.exists?
+        link.click
+        next
+      end
+
+      unless link.spans[1].text == metal_name
+        link.click
+      end
+    end
+
+    @page_title.click
   end
 
-  def select_product(index)
-    @product_list.div(class: 'liquidityPage__sidebarItem--container', index: index)
+  def select_product(product_name)
+    @sidebar_items.each do |i|
+      if i.spans[1].text == product_name
+        i.click
+      end
+    end
   end
 
   attr_reader :cancellation_complete
