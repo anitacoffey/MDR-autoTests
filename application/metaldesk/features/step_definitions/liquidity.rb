@@ -17,20 +17,48 @@ And('I navigate to the Liquidity screen as {string}') do |user_data|
   Watir::Wait.until(timeout: 5) { $browser.h1(text: 'Liquidity').exists? }
 end
 
-Given('I select a contract on the liquidity page in {string} of product type {string} and metal type {string}') do |hub, product, metal|
+Given(
+  'I select a contract on the liquidity page in {string} of product type {string} and metal type {string}'
+) do |hub, product, metal|
   page_elements = LiquidityPage.new
   page_elements.filter_hub(hub)
   page_elements.filter_metal(metal)
   page_elements.select_product(product)
 end
 
-When("I place an order of type {string}, with unit as {string}, a quantity of {int} and value of {int}") do |type, unit, qty, value|
+When(
+  'I place a spread order of type {string}, with unit as {string}, a quantity of {int} and value of {int}'
+) do |type, unit, qty, value|
   place_order(type, unit, qty, value)
 end
 
-Then("The spread order exists in the database for contract_id {int} with a quantity of {int}, value of {int} and unit of {string} for the user {string}") do |int, int2, int3, string, string2|
+Then(
+  'The spread order exists in the database for contract_id {int} with type {string}, a quantity of {int}, '\
+  'value of {int} and unit of {string} for the user {string}'
+) do |contract_id, type, qty, value, unit, user_set|
+  user = YamlLoader.user_info(user_set)
+  username = user['username']
+
+  direction = type == 'bid' ? 'buy' : 'sell'
+
+  account_uuid = Helper::Account::find_account_uuid(username)
+  order = Helper::Order::find_order(account_uuid, contract_id, direction, qty)
+
+  raise 'The order does not exist' if !order
+
+  spread_order = Db::AbxModules::SpreadOrder.find_by_id(order[:spreadOrderId])
+
+  open_times = spread_order[:openTime] == nil && spread_order[:closeTime] == nil
+  spread_value = spread_order[:spreadValue].to_f == value.to_f
+  spread_type = spread_order[:spreadType] == unit
+  conditional = open_times && spread_value && spread_type
+
+  raise 'The placed spread order does not have the expected properties' if !conditional
 end
 
+##################
+# Common Methods #
+##################
 def place_order(type, unit, quantity, value)
   Guard.check_parameters([type, unit, quantity, value])
   page_elements = LiquidityPage.new
