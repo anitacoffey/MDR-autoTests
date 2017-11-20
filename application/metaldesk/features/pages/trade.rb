@@ -1,12 +1,12 @@
 # This page is a work in progress. Many trade elements are yet to be added
 class TradePage
   def initialize
-    @left_panel_headers = $browser.div(class: 'column-headers left')
+    @left_panel_headers = $browser.div(class: ['column-headers', 'left'])
     @left_panel_contracts = $browser.div(class: 'left-col')
     @left_contract_blocks = @left_panel_contracts.divs(class: 'product-datablock-summary-container')
-    @right_panel = $browser.div(class: 'column-headers right')
+    @right_panel = $browser.div(class: ['column-headers', 'right'])
     @left_filter_toggle = @left_panel_headers.link(class: 'filterToggle')
-    @left_product_filters = @left_panel_headers.div(class: 'product-filters active')
+    @left_product_filters = @left_panel_headers.div(class: ['product-filters', 'active'])
     @left_mode_selector = @left_panel_headers.select_list(class: 'market-selector')
     @left_hub_selector = @left_panel_headers.select_list(class: 'hub-selector')
     @left_metal_selector = @left_panel_headers.select_list(class: 'metal-selector')

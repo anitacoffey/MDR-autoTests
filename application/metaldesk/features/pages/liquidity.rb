@@ -123,7 +123,7 @@ class LiquidityPage
     $browser
       .input(placeholder: 'Open Time')
       .parent
-      .divs(class: 'picker picker--time')[0]
+      .divs(class: ['picker', 'picker--time'])[0]
       .ul
       .li(text: '09:00')
   end
@@ -134,7 +134,7 @@ class LiquidityPage
     $browser
       .input(placeholder: 'Close Time')
       .parent
-      .divs(class: 'picker picker--time')[1]
+      .divs(class: ['picker', 'picker--time'])[1]
       .ul
       .li(text: '17:00')
   end
@@ -143,7 +143,7 @@ class LiquidityPage
 
   def time_zone_value
     $browser
-      .fieldset(class: 'bc-group datetime-combo')
+      .fieldset(class: ['bc-group', 'datetime-combo'])
       .div(class: 'selectize-input')
       .parent
       .div(class: 'ui-select-choices')
