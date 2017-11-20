@@ -4,7 +4,7 @@ task default: [:all]
 
 task :metaldesk do
   sh 'rubocop application database'
-  puts 'hurray'
+  sh 'cd application/metaldesk/ && cucumber'
 end
 
 task :md3api do

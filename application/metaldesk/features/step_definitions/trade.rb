@@ -9,7 +9,7 @@ And('I select {string} from the trade panel') do |mode|
     raise "Invalid select mode. Valid selection are #{valid_modes}"
   end
 
-  elements = UIElements_TradeRefactor.new
+  elements = TradePage.new
   elements.left_mode_selector.select(mode)
 end
 
@@ -21,7 +21,7 @@ And('I select a contract in {string} of product type {string} and metal type {st
     raise "Invalid select mode. Valid selection are #{valid_modes}"
   end
 
-  elements = UIElements_TradeRefactor.new
+  elements = TradePage.new
   elements.left_filter_toggle.click unless elements.left_product_filters.exists?
 
   metal_map = {
@@ -40,7 +40,7 @@ And('I select a contract in {string} of product type {string} and metal type {st
 end
 
 And('I place a {string} market order in the selected contract for a quantity of {int}') do |direction, quantity|
-  elements = UIElements_TradeRefactor.new
+  elements = TradePage.new
 
   if direction == 'buy'
     elements.buy_button.click
@@ -57,11 +57,17 @@ And('I place a {string} market order in the selected contract for a quantity of 
   elements.submit_order_button.click
 end
 
-And('I validate the matched order in the database with order details {int}, {string}, {int}, {string}') do |contract_id, direction, quantity, order_type|
+And(
+  'I validate the matched order in the database '\
+  'with order details {int}, {string}, {int}, {string} for user set {string}'
+) do |contract_id, direction, quantity, order_type, user_set|
+  user = YamlLoader.user_info(user_set)
+  username = user['username']
+
   # Give the immediate settlement service 2 seconds to create trade transactions for the order
   sleep 2
 
-  account_uuid = find_account_uuid($username)
+  account_uuid = find_account_uuid(username)
   order = find_order(account_uuid, contract_id, direction, quantity)
 
   raise 'The order has not been filled' unless order.status == 'fill'
@@ -131,20 +137,8 @@ def find_order(account_uuid, contract_id, direction, quantity)
     .limit(1)[0]
 end
 
-def find_order(account_uuid, contract_id, direction, quantity)
-  Order
-    .where(
-      accountId: account_uuid,
-      direction: direction,
-      contractId: contract_id.to_i,
-      quantity: quantity
-    )
-    .order(createdAt: 'DESC')
-    .limit(1)[0]
-end
-
 def find_order_matches(order_id, direction)
-  if direction === 'buy'
+  if direction == 'buy'
     OrderMatch.where(buyOrderId: order_id)
   else
     OrderMatch.where(sellOrderId: order_id)

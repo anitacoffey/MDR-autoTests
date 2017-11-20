@@ -1,5 +1,5 @@
 # This page is a work in progress. Many trade elements are yet to be added
-class UIElements_TradeRefactor
+class TradePage
   def initialize
     @left_panel_headers = $browser.div(class: 'column-headers left')
     @left_panel_contracts = $browser.div(class: 'left-col')
@@ -19,59 +19,31 @@ class UIElements_TradeRefactor
     @submit_order_button = $browser.link(text: 'Submit Order')
   end
 
-  def left_panel_headers
-    @left_panel_headers
-  end
+  attr_reader :left_panel_headers
 
-  def left_panel_contracts
-    @left_panel_contracts
-  end
+  attr_reader :left_panel_contracts
 
-  def left_mode_selector
-    @left_mode_selector
-  end
+  attr_reader :left_mode_selector
 
-  def left_product_filters
-    @left_product_filters
-  end
+  attr_reader :left_product_filters
 
-  def left_filter_toggle
-    @left_filter_toggle
-  end
+  attr_reader :left_filter_toggle
 
-  def left_metal_selector
-    @left_metal_selector
-  end
+  attr_reader :left_metal_selector
 
-  def left_hub_selector
-    @left_hub_selector
-  end
+  attr_reader :left_hub_selector
 
-  def buy_button
-    @buy_button
-  end
+  attr_reader :buy_button
 
-  def sell_button
-    @sell_button
-  end
+  attr_reader :sell_button
 
-  def market_order_button
-    @market_order_button
-  end
+  attr_reader :market_order_button
 
-  def limit_order_button
-    @limit_order_button
-  end
+  attr_reader :limit_order_button
 
-  def order_quantity_control
-    @order_quantity_control
-  end
+  attr_reader :order_quantity_control
 
-  def review_order_button
-    @review_order_button
-  end
+  attr_reader :review_order_button
 
-  def submit_order_button
-    @submit_order_button
-  end
+  attr_reader :submit_order_button
 end

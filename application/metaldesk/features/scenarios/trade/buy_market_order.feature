@@ -8,7 +8,7 @@ Feature: As a MetalDesk user, I should be able to create a Buy Market Order.
     And I select "<mode>" from the trade panel
     And I select a contract in "<hub>" of product type "<product>" and metal type "<metal>"
     And I place a "<direction>" market order in the selected contract for a quantity of "<quantity>"
-    And I validate the matched order in the database with order details "<contract_id>", "<direction>", "<quantity>", "<order_type>"
+    And I validate the matched order in the database with order details "<contract_id>", "<direction>", "<quantity>", "<order_type>" for the user "<data_set>"
     And I exit the browser
 
   @pc

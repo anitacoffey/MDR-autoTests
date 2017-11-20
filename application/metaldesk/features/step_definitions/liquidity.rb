@@ -161,7 +161,6 @@ When('I place and update a {string} {string} {int} {int} {float} order') do |typ
   page_elements.confirm_update_btn.click
   page_elements.return_to_order_screen_btn.wait_until_present
   page_elements.return_to_order_screen_btn.click
-
 end
 
 Then('The {string} {string} {int} {float} order is updated') do |type, unit, qty, value|
