@@ -6,7 +6,7 @@ require_relative '../../../../database/database.rb'
 run_context = File.dirname(File.absolute_path(__FILE__))
 Dir.glob(run_context + '../step_definitions/**/*.rb') { |file| require_relative file }
 Dir.glob(run_context + '../pages/**/*.rb') { |file| require_relative file }
-Dir.glob(run_context + '../interaction/**/*.rb') { |file| require_relative file }
+Dir.glob(run_context + '../hooks/**/*.rb') { |file| require_relative file }
 
 # Create a database connection
 Db.connect
@@ -18,6 +18,8 @@ Watir.default_timeout = 10
 
 # This is run before every test case, so this is where we can reset the DB
 Before do |scenario|
+  MysqlReset.reset_all_users_to_australia
+
   feature_name = scenario.scenario_outline.feature.name.to_s
   example_row = scenario.scenario_outline.cell_values.to_s
   example_name = example_row.split('"').map(&:to_s)
