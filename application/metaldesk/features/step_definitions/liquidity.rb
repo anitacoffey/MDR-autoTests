@@ -56,9 +56,53 @@ Then(
   raise 'The placed spread order does not have the expected properties' if !conditional
 end
 
+Then('I map the current state of the page for type {string}') do |type|
+  @before_state = read_depth_state(type)
+end
+
+Then(
+  'The spread order exists on the page with type {string}, a quantity of {int}, '\
+  'value of {int} and unit of {string} for the user {string}'
+) do |type, qty, value, unit, user_set|
+  after_state = read_depth_state(type)
+
+  spread_assignment = unit == 'percent' ? "#{value}%" : "$ #{value}"
+
+  order_with_properties_before = @before_state.select { |s| s[:spread] == spread_assignment && s[:qty] == qty }
+
+  if order_with_properties_before.length > 0
+    original_count = order_with_properties_before[0][:orderCount]
+    new_count = after_state.select { |s| s[:spread] == spread_assignment && s[:qty] == qty }[0][:orderCount]
+
+    unless original_count + 1 == new_count
+      raise 'The new order is not reflected in the display'
+    end
+  else
+    new_count = after_state.select { |s| s[:spread] == spread_assignment && s[:qty] == qty }[0][:orderCount]
+
+    unless new_count == 1
+      raise 'The new order is not reflected in the display'
+    end
+  end
+end
+
 ##################
 # Common Methods #
 ##################
+def read_depth_state(type)
+  page_elements = LiquidityPage.new
+  spread_orders = page_elements.depth_collection(type)
+  spread_orders.map do |so|
+    {
+      qty: so.small(text: 'Qty').parent.parent.tds[1].text.to_i,
+      spread: so.small(text: 'Spread').parent.parent.tds[1].text,
+      orders: so.small(text: 'Orders').parent.parent.tds[1].text.to_i,
+      active: so.small(text: 'Active').parent.parent.tds[1].text,
+      orderCount: so.divs(class: 'liquidityPage__halfColumn')[1].div.spans.length
+    }
+  end
+end
+
 def place_order(type, unit, quantity, value)
   Guard.check_parameters([type, unit, quantity, value])
   page_elements = LiquidityPage.new

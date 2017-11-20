@@ -90,8 +90,9 @@ class LiquidityPage
   attr_reader :depth_container
 
   def depth_collection(type)
+    side = type == 'bid' ? 'buyButton' : 'sellButton'
     @depth_container
-      .div(class: 'liquidityPage__depth--' + type)
+      .div(class: 'liquidityPage__depth--' + side)
       .parent
       .divs(class: 'liquidityPage__depth--depthItem')
   end
