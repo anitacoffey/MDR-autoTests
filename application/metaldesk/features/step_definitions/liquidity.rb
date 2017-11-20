@@ -1,6 +1,10 @@
 ####################
 # Step Definitions #
 ####################
+
+# Notes: There is still some work to be done with these step definitions.
+# The contract selections are still hard coded. It would be nice for that to
+# become parameterised
 And('I navigate to the Liquidity screen as {string}') do |user_data|
   user = YamlLoader.user_info(user_data)
 
@@ -29,6 +33,7 @@ end
 
 And('I place multiple spread orders') do
   [0, 1, 2].each do |product_index|
+    page_elements = LiquidityPage.new
     page_elements.select_product(product_index).click
     place_order('bid', 'value', 6, 2)
     verify_order_placed('bid', 'value', 6, 2)
@@ -47,7 +52,8 @@ And('I determine all contracts and place spread orders for these contracts') do
 end
 
 And('I provide liquidity for all silver contracts') do
-  select_metal('silver') # uncheck gold
+  page_elements = LiquidityPage.new
+  page_elements.filter_metal(1).click # uncheck gold
   sleep 1 # needed
   [6, 5, 4, 3, 2, 1, 0].each do |product_index|
     page_elements.select_product(product_index).click
@@ -56,7 +62,7 @@ And('I provide liquidity for all silver contracts') do
     place_order('offer', 'value', 100, -1)
     verify_order_placed('offer', 'value', 100, -1)
   end
-  select_metal('silver') # check gold back for future tests
+  page_elements.filter_metal(1).click # check gold back for future tests
 end
 
 When('I click the kill all orders button') do
@@ -98,21 +104,20 @@ When('I place and cancel a {string} {string} {int} {int} order') do |type, unit,
     order_qty, order_value, order_value_unit = iterate_to_find_order(order_type, itr)
     display_unit = percent_or_value(unit)
 
-    next if order_qty.to_i == qty && order_value.to_f == value && order_value_unit == display_unit
+    next unless order_qty.to_i == qty && order_value.to_f == value && order_value_unit == display_unit
     flag += 1
     page_elements.cancel_btn(order_type, itr).click
     break
   end
 
+  # if order was found and set to be cancelled, then display success message, else raise error
+  raise 'Correct order not visible' if flag != 1
+
   # confirm cancellation
   page_elements.cancel_below_spread_orders_btn.wait_until_present
   page_elements.cancel_below_spread_orders_btn.click
 
-  # if order was found and set to be cancelled, then display success message, else raise error
-  raise 'Correct order not visible' if flag != 1
-
-  # click again on the product you're working on, so that the depth is indeed refreshed
-  page_elements.select_product(5).click
+  page_elements.cancellation_complete.wait_until_present
 end
 
 # these are the two vars from the data grid
@@ -125,7 +130,7 @@ Then('The {string} {string} {int} {int} order is not visible') do |type, unit, q
   raise 'Order cancellation not verified' if flag == 1
 end
 
-When('I place and update a {string} {string} {int} {int} order') do |type, unit, qty, value|
+When('I place and update a {string} {string} {int} {int} {float} order') do |type, unit, qty, value, update_value|
   page_elements = LiquidityPage.new
   place_order(type, unit, qty, value)
 
@@ -139,17 +144,16 @@ When('I place and update a {string} {string} {int} {int} order') do |type, unit,
   length.times do |itr|
     order_qty, order_value, order_value_unit = iterate_to_find_order(order_type, itr)
     display_unit = percent_or_value(unit)
-
-    next if order_qty.to_i == qty && order_value.to_f == value && order_value_unit == display_unit
+    next unless order_qty.to_i == qty && order_value.to_f == value && order_value_unit == display_unit
     flag += 1
     page_elements.update_btn(order_type, itr).click
     break
   end
 
-  update_value = value + 1
+  # if order was found and set to be updated, display success message, else raise error
+  raise 'Correct order not visible' if flag != 1
 
   # input new values and confirm update
-  page_elements.review_update_btn.wait_until_present
   page_elements.value_input.to_subtype.clear
   page_elements.value_input.send_keys(update_value)
   page_elements.review_update_btn.click
@@ -158,11 +162,9 @@ When('I place and update a {string} {string} {int} {int} order') do |type, unit,
   page_elements.return_to_order_screen_btn.wait_until_present
   page_elements.return_to_order_screen_btn.click
 
-  # if order was found and set to be updated, display success message, else raise error
-  raise 'Correct order not visible' if flag != 1
 end
 
-Then('The {string} {string} {int} {int} order is updated') do |type, unit, qty, value|
+Then('The {string} {string} {int} {float} order is updated') do |type, unit, qty, value|
   # to verify order has been updated
   # find the depth
   order_type = bid_or_offer(type)
@@ -229,7 +231,6 @@ When('I place and cancel a {string} {string} {int} {int} order in active hours')
   # input open and close times and time zone
   input_open_close_times
 
-  # REVIEW: order
   page_elements.review_order_btn.wait_until_present
   page_elements.review_order_btn.click
 
@@ -246,21 +247,21 @@ When('I place and cancel a {string} {string} {int} {int} order in active hours')
   length.times do |itr|
     order_qty, order_value, order_value_unit = iterate_to_find_order(order_type, itr)
     display_unit = percent_or_value(unit)
-    next if order_qty.to_i == qty && order_value.to_f == value && order_value_unit == display_unit
+    next unless order_qty.to_i == qty && order_value.to_f == value && order_value_unit == display_unit
     flag += 1
     page_elements.cancel_btn(order_type, itr).click
     break
   end
 
+  # if order was found and set to be cancelled, then display success message, else raise error
+  raise 'Correct order not visible' if flag != 1
+
   # confirm cancellation
   page_elements.cancel_below_spread_orders_btn.wait_until_present
   page_elements.cancel_below_spread_orders_btn.click
 
-  # if order was found and set to be cancelled, then display success message, else raise error
-  raise 'Correct order not visible' if flag != 1
-
-  # click again on the product you're working on, so that the depth is indeed refreshed
-  page_elements.select_product(5).click
+  page_elements.cancellation_complete.wait_until_present
+  page_elements.cancellation_complete.wait_until_present
 end
 
 Then('The {string} {string} {int} {int} order is not visible in active hours') do |type, unit, qty, value|
@@ -373,12 +374,14 @@ end
 # helper method to find the depth values
 def iterate_to_find_order(order_type, itr)
   Guard.check_parameters([order_type, itr])
+
   page_elements = LiquidityPage.new
   page_elements.depth_container.wait_until_present
   page_elements.depth_qty(order_type, itr).wait_until_present
+
   order_qty = page_elements.depth_qty(order_type, itr).text
-  page_elements.depth_container.wait_until_present
   page_elements.depth_value(order_type, itr).wait_until_present
+
   if page_elements.depth_value(order_type, itr).text.include? '%'
     order_value_unit = 'PERCENT'
     order_value = page_elements.depth_value(order_type, itr).text[0..4]
@@ -386,6 +389,7 @@ def iterate_to_find_order(order_type, itr)
     order_value_unit = 'DOLLARS'
     order_value = page_elements.depth_value(order_type, itr).text[2..6]
   end
+
   [order_qty, order_value, order_value_unit]
 end
 
@@ -413,8 +417,12 @@ end
 # helper method to find the depth
 def find_the_depth(order_type)
   Guard.check_parameters([order_type])
+
+  # We sleep here as we are waiting on an AJAX request, and we have no nice
+  # way of waiting for it to update otherwise
+  sleep 2
+
   page_elements = LiquidityPage.new
-  page_elements.review_order_btn.wait_until_present
   page_elements.depth_container.wait_until_present
   length = page_elements.depth_collection(order_type).length
   length

@@ -18,8 +18,7 @@ Scenario Outline: create and cancel a new order and verify the order has been ca
   Given I login with username and password in the "<data_set>"
   And I navigate to the Liquidity screen as "<data_set>"
   And I select a product
-  When I place and cancel a "<type>" "<unit>" <qty> <value> order
-  Then The "<type>" "<unit>" <qty> <value> order is not visible
+  Then I place and cancel a "<type>" "<unit>" <qty> <value> order
   And I exit the browser
   @mm
   Examples:MM
@@ -31,14 +30,14 @@ Scenario Outline: create and update a new order and verify the order has been up
   Given I login with username and password in the "<data_set>"
   And I navigate to the Liquidity screen as "<data_set>"
   And I select a product
-  When I place and update a "<type>" "<unit>" <qty> <value> order
-  Then The "<type>" "<unit>" <qty> <value> order is updated
+  When I place and update a "<type>" "<unit>" <qty> <value> <update_value> order
+  Then The "<type>" "<unit>" <qty> <update_value> order is updated
   And I exit the browser
   @mm
   Examples:MM
-    |type  |unit    |data_set     |qty|value|
-    |offer |percent |PB2_TestData1|2  |2    |
-    |bid   |value   |PB2_TestData1|3  |-5   |
+    |type  |unit    |data_set     |qty|value|update_value|
+    |offer |percent |PB2_TestData1|2  |2    |4.5         |
+    |bid   |value   |PB2_TestData1|3  |-5   |-7.7        |
 
 Scenario Outline: create and verify a new order with active hours
   Given I login with username and password in the "<data_set>"
@@ -58,7 +57,6 @@ Scenario Outline: create and cancel a new order with active hours and verify the
   And I navigate to the Liquidity screen as "<data_set>"
   And I select a product
   When I place and cancel a "<type>" "<unit>" <qty> <value> order in active hours
-  Then The "<type>" "<unit>" <qty> <value> order is not visible in active hours
   And I exit the browser
   @mm
   Examples:MM

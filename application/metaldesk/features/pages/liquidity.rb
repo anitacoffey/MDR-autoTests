@@ -19,8 +19,8 @@ class LiquidityPage
     @percent_btn = $browser.a(text: '%')
     @offer_btn = $browser.a(text: 'Offer')
     @active_hours_btn = $browser.a(text: 'Active Hours')
-    @open_time = $browser.fieldset(class: 'bc-group datetime-combo').input(placeholder: 'Open Time')
-    @close_time = $browser.fieldset(class: 'bc-group datetime-combo').input(placeholder: 'Close Time')
+    @open_time = $browser.input(placeholder: 'Open Time')
+    @close_time = $browser.input(placeholder: 'Close Time')
     @time_zone = $browser.fieldset(class: 'bc-group datetime-combo').div(class: 'selectize-input')
   end
 
@@ -121,10 +121,9 @@ class LiquidityPage
 
   def open_time_value
     $browser
-      .fieldset(class: 'bc-group datetime-combo')
       .input(placeholder: 'Open Time')
       .parent
-      .div(class: 'picker picker--time', index: 0)
+      .divs(class: 'picker picker--time')[0]
       .ul
       .li(text: '09:00')
   end
@@ -133,10 +132,9 @@ class LiquidityPage
 
   def close_time_value
     $browser
-      .fieldset(class: 'bc-group datetime-combo')
       .input(placeholder: 'Close Time')
       .parent
-      .div(class: 'picker picker--time', index: 1)
+      .divs(class: 'picker picker--time')[1]
       .ul
       .li(text: '17:00')
   end
