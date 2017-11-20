@@ -5,8 +5,8 @@ Feature: A liquidity provider can place, cancel and update spread orders on the 
     Given I login with username and password in the "<data_set>"
     And I navigate to the Liquidity screen as "<data_set>"
     And I select a contract on the liquidity page in "<hub>" of product type "<product>" and metal type "<metal>"
-    When I place an order of type "<type>", with values as "<unit>", a quantity of <qty> and value of <value>
-    Then The order exists in the database
+    When I place an order of type "<type>", with unit as "<unit>", a quantity of <qty> and value of <value>
+    Then The spread order exists in the database for contract_id <contract_id> with a quantity of <qty>, value of <value> and unit of "<unit>" for the user "<data_set>"
     And I exit the browser
 
     @mm

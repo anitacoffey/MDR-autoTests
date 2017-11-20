@@ -23,3 +23,60 @@ Given('I select a contract on the liquidity page in {string} of product type {st
   page_elements.filter_metal(metal)
   page_elements.select_product(product)
 end
+
+When("I place an order of type {string}, with unit as {string}, a quantity of {int} and value of {int}") do |type, unit, qty, value|
+  place_order(type, unit, qty, value)
+end
+
+Then("The spread order exists in the database for contract_id {int} with a quantity of {int}, value of {int} and unit of {string} for the user {string}") do |int, int2, int3, string, string2|
+end
+
+def place_order(type, unit, quantity, value)
+  Guard.check_parameters([type, unit, quantity, value])
+  page_elements = LiquidityPage.new
+
+  # input to form
+  input_place_order(type, unit, quantity, value)
+  page_elements.review_order_btn.click
+
+  # confirm order placement
+  confirm_order
+end
+
+def confirm_order
+  page_elements = LiquidityPage.new
+  page_elements.confirm_placement_btn.wait_until_present
+  page_elements.confirm_placement_btn.click
+  page_elements.return_to_order_screen_btn.wait_until_present
+  page_elements.return_to_order_screen_btn.click
+end
+
+def input_place_order(type, unit, qty, val)
+  page_elements = LiquidityPage.new
+  offer_click_or_not(type)
+  value_click_or_not(unit)
+  page_elements.quantity_input.to_subtype.clear
+  page_elements.quantity_input.send_keys(qty)
+  page_elements.value_input.to_subtype.clear
+  page_elements.value_input.send_keys(val)
+end
+
+def offer_click_or_not(type)
+  return if type != 'offer'
+
+  page_elements = LiquidityPage.new
+  page_elements.offer_btn.wait_until_present
+  page_elements.offer_btn.click
+end
+
+def value_click_or_not(unit)
+  page_elements = LiquidityPage.new
+
+  if unit == 'value'
+    page_elements.value_btn.wait_until_present
+    page_elements.value_btn.click
+  else
+    page_elements.percent_btn.wait_until_present
+    page_elements.percent_btn.click
+  end
+end
