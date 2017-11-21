@@ -75,6 +75,15 @@ class LiquidityPage
     end
   end
 
+  def confirmation_ids
+    unfiltered_ids = $browser.smalls(text: 'Id').map do |e|
+      e.parent.span(class: 'liquidityPage__textValue').text
+    end
+
+    mapped_ids = unfiltered_ids.map { |id| id.to_i }
+    mapped_ids.select { |id| id != 0 }
+  end
+
   attr_reader :cancellation_complete
 
   attr_reader :kill_all_btn
@@ -125,23 +134,15 @@ class LiquidityPage
 
   attr_reader :return_to_order_screen_btn
 
-  def cancel_btn(type, index)
-    @depth_container
-      .div(class: 'liquidityPage__depth--' + type)
-      .parent
-      .div(class: 'liquidityPage__depth--depthItem', index: index)
-      .a(text: 'Cancel Order')
+  def cancel_btn(spread_order_container)
+    spread_order_container.a(text: 'Cancel Order')
+  end
+
+  def update_btn(spread_order_container)
+    spread_order_container.a(text: 'Edit Order')
   end
 
   attr_reader :cancel_below_spread_orders_btn
-
-  def update_btn(type, index)
-    @depth_container
-      .div(class: 'liquidityPage__depth--' + type)
-      .parent
-      .div(class: 'liquidityPage__depth--depthItem', index: index)
-      .a(text: 'Edit Order')
-  end
 
   attr_reader :review_update_btn
 

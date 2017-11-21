@@ -45,6 +45,7 @@ Then(
   order = Helper::Order::find_order(account_uuid, contract_id, direction, qty)
 
   raise 'The order does not exist' if !order
+  raise 'The order should be open' if order[:status] != 'submit'
 
   spread_order = Db::AbxModules::SpreadOrder.find_by_id(order[:spreadOrderId])
 
@@ -62,23 +63,23 @@ end
 
 Then(
   'The spread order exists on the page with type {string}, a quantity of {int}, '\
-  'value of {int} and unit of {string} for the user {string}'
-) do |type, qty, value, unit, user_set|
+  'value of {int} and unit of {string}'
+) do |type, qty, value, unit|
   after_state = read_depth_state(type)
 
-  spread_assignment = unit == 'percent' ? "#{value}%" : "$ #{value}"
+  spread_assignment = determine_display_unit(unit, value)
 
   order_with_properties_before = @before_state.select { |s| s[:spread] == spread_assignment && s[:qty] == qty }
 
   if order_with_properties_before.length > 0
-    original_count = order_with_properties_before[0][:orderCount]
-    new_count = after_state.select { |s| s[:spread] == spread_assignment && s[:qty] == qty }[0][:orderCount]
+    original_count = order_with_properties_before[0][:orders]
+    new_count = after_state.select { |s| s[:spread] == spread_assignment && s[:qty] == qty }[0][:orders]
 
     unless original_count + 1 == new_count
       raise 'The new order is not reflected in the display'
     end
   else
-    new_count = after_state.select { |s| s[:spread] == spread_assignment && s[:qty] == qty }[0][:orderCount]
+    new_count = after_state.select { |s| s[:spread] == spread_assignment && s[:qty] == qty }[0][:orders]
 
     unless new_count == 1
       raise 'The new order is not reflected in the display'
@@ -86,9 +87,40 @@ Then(
   end
 end
 
+When(
+  'I cancel a spread order of type {string}, with unit as {string}, a quantity of {int} and value of {int}'
+) do |type, unit, qty, value|
+  cancel_order(type, unit, qty, value)
+end
+
+Then(
+  'The spread order is cancelled in the database for contract_id {int} with type '\
+  '{string}, a quantity of {int}, value of {int} and unit of {string} for the user {string}'
+) do |contract_id, type, qty, value, unit, user_set|
+  orders = Helper::Order.find_orders_by_id(@spread_order_ids_to_be_cancelled)
+
+  orders.each do |o|
+    raise 'Order not cancelled' if o[:status] != 'cancel'
+  end
+end
+
+Then(
+  'The spread order does not exist on the page with type {string}, a quantity of {int}, '\
+  'value of {int} and unit of {string}'
+) do |type, qty, value, unit|
+  spread_assignment = determine_display_unit(unit, value)
+  page_state_after_cancellation = read_depth_state(type)
+  orders_that_were_cancelled = page_state_after_cancellation.select { |s| s[:spread] == spread_assignment && s[:qty] == qty }
+  raise 'Orders not removed from page' if orders_that_were_cancelled.length > 0
+end
+
 ##################
 # Common Methods #
 ##################
+def determine_display_unit(unit, value)
+  unit == 'percent' ? "#{value}%" : "$ #{value}"
+end
+
 def read_depth_state(type)
   page_elements = LiquidityPage.new
   spread_orders = page_elements.depth_collection(type)
@@ -98,9 +130,36 @@ def read_depth_state(type)
       spread: so.small(text: 'Spread').parent.parent.tds[1].text,
       orders: so.small(text: 'Orders').parent.parent.tds[1].text.to_i,
       active: so.small(text: 'Active').parent.parent.tds[1].text,
-      orderCount: so.divs(class: 'liquidityPage__halfColumn')[1].div.spans.length
     }
   end
+end
+
+def find_spread_in_order_list(type, qty, display_unit)
+  page_elements = LiquidityPage.new
+  spread_orders = page_elements.depth_collection(type)
+  target_orders = spread_orders.select do |so|
+    qty_is_correct = so.small(text: 'Qty').parent.parent.tds[1].text.to_i == qty
+    spread_unit_is_correct = so.small(text: 'Spread').parent.parent.tds[1].text
+    qty_is_correct && spread_unit_is_correct
+  end
+
+  target_orders[0]
+end
+
+def cancel_order(type, unit, quantity, value)
+  Guard.check_parameters([type, unit, quantity, value])
+  page_elements = LiquidityPage.new
+
+  display_unit = determine_display_unit(unit, value)
+  spread_order_element = find_spread_in_order_list(type, quantity, display_unit)
+  page_elements.cancel_btn(spread_order_element).click
+
+  page_elements.cancel_below_spread_orders_btn.wait_until_present
+
+  @spread_order_ids_to_be_cancelled = page_elements.confirmation_ids
+  page_elements.cancel_below_spread_orders_btn.click
+
+  page_elements.cancellation_complete.wait_until_present
 end
 
 def place_order(type, unit, quantity, value)
