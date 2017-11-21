@@ -65,6 +65,7 @@ Then(
   'The spread order exists on the page with type {string}, a quantity of {int}, '\
   'value of {int} and unit of {string}'
 ) do |type, qty, value, unit|
+  sleep 2
   after_state = read_depth_state(type)
 
   spread_assignment = determine_display_unit(unit, value)
@@ -114,6 +115,13 @@ Then(
   raise 'Orders not removed from page' if orders_that_were_cancelled.length > 0
 end
 
+When(
+  'I update a spread order of type {string}, with unit as {string}, a quantity of {int}, '\
+  'an updated quantity of {int}, a value of {int} and an updated value of {int}'
+) do |type, unit, quantity, updated_quantity, value, updated_value|
+  update_order(type, unit, quantity, value, updated_quantity, updated_value)
+end
+
 ##################
 # Common Methods #
 ##################
@@ -160,6 +168,25 @@ def cancel_order(type, unit, quantity, value)
   page_elements.cancel_below_spread_orders_btn.click
 
   page_elements.cancellation_complete.wait_until_present
+end
+
+def update_order(type, unit, original_quantity, original_value, update_quantity, update_value)
+  page_elements = LiquidityPage.new
+
+  display_unit = determine_display_unit(unit, original_value)
+  spread_order_element = find_spread_in_order_list(type, original_quantity, display_unit)
+  page_elements.update_btn(spread_order_element).click
+
+  page_elements.quantity_input.to_subtype.clear
+  page_elements.quantity_input.send_keys(update_quantity)
+  page_elements.value_input.to_subtype.clear
+  page_elements.value_input.send_keys(update_value)
+  page_elements.review_update_btn.click
+
+  page_elements.confirm_update_btn.wait_until_present
+  page_elements.confirm_update_btn.click
+  page_elements.return_to_order_screen_btn.wait_until_present
+  page_elements.return_to_order_screen_btn.click
 end
 
 def place_order(type, unit, quantity, value)
