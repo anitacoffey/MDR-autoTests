@@ -38,13 +38,9 @@ class LiquidityPage
       unchecked = current_classes.include? 'unchecked'
       target_hub = l.div.span.text == hub_name
 
-      if unchecked && target_hub
-        l.div.click
-      end
+      l.div.click if unchecked && target_hub
 
-      if !unchecked && !target_hub
-        l.div.click
-      end
+      l.div.click if !unchecked && !target_hub
     end
 
     # Click the page title to unfocus the hub filter
@@ -59,9 +55,7 @@ class LiquidityPage
         next
       end
 
-      unless link.spans[1].text == metal_name
-        link.click
-      end
+      link.click unless link.spans[1].text == metal_name
     end
 
     @page_title.click
@@ -69,9 +63,7 @@ class LiquidityPage
 
   def select_product(product_name)
     @sidebar_items.each do |i|
-      if i.spans[1].text == product_name
-        i.click
-      end
+      i.click if i.spans[1].text == product_name
     end
   end
 
@@ -80,8 +72,8 @@ class LiquidityPage
       e.parent.span(class: 'liquidityPage__textValue').text
     end
 
-    mapped_ids = unfiltered_ids.map { |id| id.to_i }
-    mapped_ids.select { |id| id != 0 }
+    mapped_ids = unfiltered_ids.map(&:to_i)
+    mapped_ids.reject { |id| id == 0 }
   end
 
   attr_reader :cancellation_complete

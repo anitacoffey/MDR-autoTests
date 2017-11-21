@@ -47,20 +47,20 @@ Then(
 
   direction = type == 'bid' ? 'buy' : 'sell'
 
-  account_uuid = Helper::Account::find_account_uuid(username)
-  order = Helper::Order::find_order(account_uuid, contract_id, direction, qty)
+  account_uuid = Helper::Account.find_account_uuid(username)
+  order = Helper::Order.find_order(account_uuid, contract_id, direction, qty)
 
-  raise 'The order does not exist' if !order
+  raise 'The order does not exist' unless order
   raise 'The order should be open' if order[:status] != 'submit'
 
   spread_order = Db::AbxModules::SpreadOrder.find_by_id(order[:spreadOrderId])
 
-  open_times = spread_order[:openTime] == nil && spread_order[:closeTime] == nil
+  open_times = spread_order[:openTime].nil? && spread_order[:closeTime].nil?
   spread_value = spread_order[:spreadValue].to_f == value.to_f
   spread_type = spread_order[:spreadType] == unit
   conditional = open_times && spread_value && spread_type
 
-  raise 'The placed spread order does not have the expected properties' if !conditional
+  raise 'The placed spread order does not have the expected properties' unless conditional
 end
 
 Then(
@@ -72,20 +72,20 @@ Then(
 
   direction = type == 'bid' ? 'buy' : 'sell'
 
-  account_uuid = Helper::Account::find_account_uuid(username)
-  order = Helper::Order::find_order(account_uuid, contract_id, direction, qty)
+  account_uuid = Helper::Account.find_account_uuid(username)
+  order = Helper::Order.find_order(account_uuid, contract_id, direction, qty)
 
-  raise 'The order does not exist' if !order
+  raise 'The order does not exist' unless order
   raise 'The order should be open' if order[:status] != 'submit'
 
   spread_order = Db::AbxModules::SpreadOrder.find_by_id(order[:spreadOrderId])
 
-  open_times = spread_order[:openTime] != nil && spread_order[:closeTime] != nil
+  open_times = !spread_order[:openTime].nil? && !spread_order[:closeTime].nil?
   spread_value = spread_order[:spreadValue].to_f == value.to_f
   spread_type = spread_order[:spreadType] == unit
   conditional = open_times && spread_value && spread_type
 
-  raise 'The placed spread order does not have the expected properties' if !conditional
+  raise 'The placed spread order does not have the expected properties' unless conditional
 end
 
 Then('I map the current state of the page for type {string}') do |type|
@@ -103,7 +103,7 @@ Then(
 
   order_with_properties_before = @before_state.select { |s| s[:spread] == spread_assignment && s[:qty] == qty }
 
-  if order_with_properties_before.length > 0
+  if !order_with_properties_before.empty?
     original_count = order_with_properties_before[0][:orders]
     new_count = after_state.select { |s| s[:spread] == spread_assignment && s[:qty] == qty }[0][:orders]
 
@@ -113,9 +113,7 @@ Then(
   else
     new_count = after_state.select { |s| s[:spread] == spread_assignment && s[:qty] == qty }[0][:orders]
 
-    unless new_count == 1
-      raise 'The new order is not reflected in the display'
-    end
+    raise 'The new order is not reflected in the display' unless new_count == 1
   end
 end
 
@@ -128,7 +126,7 @@ end
 Then(
   'The spread order is cancelled in the database for contract_id {int} with type '\
   '{string}, a quantity of {int}, value of {int} and unit of {string} for the user {string}'
-) do |contract_id, type, qty, value, unit, user_set|
+) do |_contract_id, _type, _qty, _value, _unit, _user_set|
   orders = Helper::Order.find_orders_by_id(@spread_order_ids_to_be_cancelled)
 
   orders.each do |o|
@@ -143,7 +141,7 @@ Then(
   spread_assignment = determine_display_unit(unit, value)
   page_state_after_cancellation = read_depth_state(type)
   orders_that_were_cancelled = page_state_after_cancellation.select { |s| s[:spread] == spread_assignment && s[:qty] == qty }
-  raise 'Orders not removed from page' if orders_that_were_cancelled.length > 0
+  raise 'Orders not removed from page' unless orders_that_were_cancelled.empty?
 end
 
 When(
@@ -164,7 +162,7 @@ end
 Then('All spread orders for the account are cancelled as {string}') do |user_set|
   user = YamlLoader.user_info(user_set)
   username = user['username']
-  account_uuid = Helper::Account::find_account_uuid(username)
+  account_uuid = Helper::Account.find_account_uuid(username)
 
   orders = Db::AbxModules::Order.where(orderType: 'spread', accountId: account_uuid)
 
@@ -188,12 +186,12 @@ def read_depth_state(type)
       qty: so.small(text: 'Qty').parent.parent.tds[1].text.to_i,
       spread: so.small(text: 'Spread').parent.parent.tds[1].text,
       orders: so.small(text: 'Orders').parent.parent.tds[1].text.to_i,
-      active: so.small(text: 'Active').parent.parent.tds[1].text,
+      active: so.small(text: 'Active').parent.parent.tds[1].text
     }
   end
 end
 
-def find_spread_in_order_list(type, qty, display_unit)
+def find_spread_in_order_list(type, qty, _display_unit)
   page_elements = LiquidityPage.new
   spread_orders = page_elements.depth_collection(type)
   target_orders = spread_orders.select do |so|

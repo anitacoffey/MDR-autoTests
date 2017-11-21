@@ -67,8 +67,8 @@ And(
   # Give the immediate settlement service 2 seconds to create trade transactions for the order
   sleep 2
 
-  account_uuid = Helper::Account::find_account_uuid(username)
-  order = Helper::Order::find_order(account_uuid, contract_id, direction, quantity)
+  account_uuid = Helper::Account.find_account_uuid(username)
+  order = Helper::Order.find_order(account_uuid, contract_id, direction, quantity)
 
   raise 'The order has not been filled' unless order.status == 'fill'
 
@@ -83,9 +83,9 @@ And(
   end
 
   # Check the balance history to ensure holdings balance moved as expected
-  order_matches = Helper::Order::find_order_matches(order.id, direction)
+  order_matches = Helper::Order.find_order_matches(order.id, direction)
   trade_transactions = order_matches.map do |order_match|
-    Helper::Transaction::find_trade_transaction(order_match.id, account_uuid)
+    Helper::Transaction.find_trade_transaction(order_match.id, account_uuid)
   end
 
   recorded_quantity = trade_transactions.map(&:quantity)
@@ -95,10 +95,10 @@ And(
 
   trade_transactions.each do |tt|
     recorded_cost = tt.settlementAmount
-    account_balance_movement = Helper::Transaction::account_balance_change_with_trade_transaction(tt.id, account_uuid, direction, 2)
+    account_balance_movement = Helper::Transaction.account_balance_change_with_trade_transaction(tt.id, account_uuid, direction, 2)
 
     qty = tt.quantity
-    holdings_balance_movement = Helper::Transaction::holdings_balance_change_with_trade_transaction(
+    holdings_balance_movement = Helper::Transaction.holdings_balance_change_with_trade_transaction(
       tt.id,
       account_uuid,
       direction,
