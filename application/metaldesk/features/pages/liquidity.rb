@@ -21,7 +21,7 @@ class LiquidityPage
     @active_hours_btn = $browser.a(text: 'Active Hours')
     @open_time = $browser.input(placeholder: 'Open Time')
     @close_time = $browser.input(placeholder: 'Close Time')
-    @time_zone = $browser.fieldset(class: 'bc-group datetime-combo').div(class: 'selectize-input')
+    @time_zone = $browser.fieldset(class: ['bc-group', 'datetime-combo']).div(class: 'selectize-input')
     @page_title = $browser.h2
     @sidebar_items = $browser.divs(class: 'liquidityPage__sidebarItem--container')
   end

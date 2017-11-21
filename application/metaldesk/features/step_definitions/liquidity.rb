@@ -32,6 +32,12 @@ When(
   place_order(type, unit, qty, value)
 end
 
+When(
+  'I place an active hours spread order of type {string}, with unit as {string}, a quantity of {int} and value of {int}'
+) do |type, unit, qty, value|
+  place_active_order(type, unit, qty, value)
+end
+
 Then(
   'The spread order exists in the database for contract_id {int} with type {string}, a quantity of {int}, '\
   'value of {int} and unit of {string} for the user {string}'
@@ -50,6 +56,31 @@ Then(
   spread_order = Db::AbxModules::SpreadOrder.find_by_id(order[:spreadOrderId])
 
   open_times = spread_order[:openTime] == nil && spread_order[:closeTime] == nil
+  spread_value = spread_order[:spreadValue].to_f == value.to_f
+  spread_type = spread_order[:spreadType] == unit
+  conditional = open_times && spread_value && spread_type
+
+  raise 'The placed spread order does not have the expected properties' if !conditional
+end
+
+Then(
+  'The active spread order exists in the database for contract_id {int} with type {string}, a quantity of {int}, '\
+  'value of {int} and unit of {string} for the user {string}'
+) do |contract_id, type, qty, value, unit, user_set|
+  user = YamlLoader.user_info(user_set)
+  username = user['username']
+
+  direction = type == 'bid' ? 'buy' : 'sell'
+
+  account_uuid = Helper::Account::find_account_uuid(username)
+  order = Helper::Order::find_order(account_uuid, contract_id, direction, qty)
+
+  raise 'The order does not exist' if !order
+  raise 'The order should be open' if order[:status] != 'submit'
+
+  spread_order = Db::AbxModules::SpreadOrder.find_by_id(order[:spreadOrderId])
+
+  open_times = spread_order[:openTime] != nil && spread_order[:closeTime] != nil
   spread_value = spread_order[:spreadValue].to_f == value.to_f
   spread_type = spread_order[:spreadType] == unit
   conditional = open_times && spread_value && spread_type
@@ -201,6 +232,21 @@ def place_order(type, unit, quantity, value)
   confirm_order
 end
 
+def place_active_order(type, unit, quantity, value)
+  Guard.check_parameters([type, unit, quantity, value])
+  page_elements = LiquidityPage.new
+
+  # input to form
+  input_place_order(type, unit, quantity, value)
+  page_elements.active_hours_btn.click
+  input_open_close_times
+
+  page_elements.review_order_btn.click
+
+  # confirm order placement
+  confirm_order
+end
+
 def confirm_order
   page_elements = LiquidityPage.new
   page_elements.confirm_placement_btn.wait_until_present
@@ -237,4 +283,22 @@ def value_click_or_not(unit)
     page_elements.percent_btn.wait_until_present
     page_elements.percent_btn.click
   end
+end
+
+def input_open_close_times
+  page_elements = LiquidityPage.new
+  page_elements.open_time.wait_until_present
+  page_elements.open_time.click
+  page_elements.open_time_value.wait_until_present
+  page_elements.open_time_value.click
+
+  page_elements.close_time.wait_until_present
+  page_elements.close_time.click
+  page_elements.close_time_value.wait_until_present
+  page_elements.close_time_value.click
+
+  page_elements.time_zone.wait_until_present
+  page_elements.time_zone.click
+  page_elements.time_zone_value.wait_until_present
+  page_elements.time_zone_value.click
 end

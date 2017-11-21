@@ -17,7 +17,24 @@ Feature: A liquidity provider can place, cancel and update spread orders on the 
       | bid | percent | PB2_TestData1 | 2 | 2 | Brisbane | Canadian Maple | Gold | 28 |
       | offer | value | PB2_TestData1 | 3 | -5 | Sydney | American Eagle | Silver | 112 |
 
-  Scenario Outline: create and cancel an order
+  @target
+  Scenario Outline: create a spread order in active hours
+    Given I login with username and password in the "<data_set>"
+    Then I navigate to the Liquidity screen as "<data_set>"
+    And I select a contract on the liquidity page in "<hub>" of product type "<product>" and metal type "<metal>"
+    And I map the current state of the page for type "<type>"
+    When I place an active hours spread order of type "<type>", with unit as "<unit>", a quantity of <qty> and value of <value>
+    Then The active spread order exists in the database for contract_id <contract_id> with type "<type>", a quantity of <qty>, value of <value> and unit of "<unit>" for the user "<data_set>"
+    And The spread order exists on the page with type "<type>", a quantity of <qty>, value of <value> and unit of "<unit>"
+    Then I exit the browser
+
+    @mm
+    Examples: MM
+      | type | unit | data_set | qty | value | hub | product | metal | contract_id |
+      | bid | percent | PB2_TestData1 | 13 | 2 | Brisbane | Canadian Maple | Gold | 28 |
+      | offer | value | PB2_TestData1 | 11 | -6 | Sydney | American Eagle | Silver | 112 |
+
+  Scenario Outline: create and cancel a spread order
     Given I login with username and password in the "<data_set>"
     Then I navigate to the Liquidity screen as "<data_set>"
     And I select a contract on the liquidity page in "<hub>" of product type "<product>" and metal type "<metal>"
@@ -36,7 +53,7 @@ Feature: A liquidity provider can place, cancel and update spread orders on the 
       | bid | percent | PB2_TestData1 | 2 | 2 | Brisbane | Canadian Maple | Gold | 28 |
       | offer | value | PB2_TestData1 | 3 | -5 | Sydney | American Eagle | Silver | 112 |
 
-  Scenario Outline: create and update an order
+  Scenario Outline: create and update a spread order
     Given I login with username and password in the "<data_set>"
     Then I navigate to the Liquidity screen as "<data_set>"
     And I select a contract on the liquidity page in "<hub>" of product type "<product>" and metal type "<metal>"
