@@ -153,6 +153,26 @@ When(
   update_order(type, unit, quantity, value, updated_quantity, updated_value)
 end
 
+When('I click the kill all orders button') do
+  page_elements = LiquidityPage.new
+  page_elements.kill_all_btn.click
+  page_elements.cancel_below_spread_orders_btn.wait_until_present
+  page_elements.cancel_below_spread_orders_btn.click
+  page_elements.cancellation_complete.wait_until_present
+end
+
+Then('All spread orders for the account are cancelled as {string}') do |user_set|
+  user = YamlLoader.user_info(user_set)
+  username = user['username']
+  account_uuid = Helper::Account::find_account_uuid(username)
+
+  orders = Db::AbxModules::Order.where(orderType: 'spread', accountId: account_uuid)
+
+  orders.each do |o|
+    raise 'Order is not cancelled' if o[:status] != 'cancel'
+  end
+end
+
 ##################
 # Common Methods #
 ##################
