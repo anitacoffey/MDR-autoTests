@@ -29,6 +29,9 @@ Rubocop is used to enforce consistent code styling. The specs will not run if th
 
 When new test suites are added, they should be added to the Rakefile.
 
+## Headless testing
+The tests can easily be run headlessly by providing the HEADLESS=true ENV var to either the rake command or cucumber directly.
+
 ## Rubocop
 
 Rubcop can be run manually to get a better stack trace by running `rubocop`.
