@@ -95,7 +95,12 @@ And(
 
   trade_transactions.each do |tt|
     recorded_cost = tt.settlementAmount
-    account_balance_movement = Helper::Transaction.account_balance_change_with_trade_transaction(tt.id, account_uuid, direction, 2)
+    account_balance_movement = Helper::Transaction.account_balance_change_with_trade_transaction(
+      tt.id,
+      account_uuid,
+      direction,
+      2
+    )
 
     qty = tt.quantity
     holdings_balance_movement = Helper::Transaction.holdings_balance_change_with_trade_transaction(

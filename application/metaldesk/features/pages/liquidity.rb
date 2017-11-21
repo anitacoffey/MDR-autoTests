@@ -73,7 +73,7 @@ class LiquidityPage
     end
 
     mapped_ids = unfiltered_ids.map(&:to_i)
-    mapped_ids.reject { |id| id == 0 }
+    mapped_ids.reject(&:zero?)
   end
 
   attr_reader :cancellation_complete
