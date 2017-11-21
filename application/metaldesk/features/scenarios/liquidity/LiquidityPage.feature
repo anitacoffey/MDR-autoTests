@@ -86,5 +86,3 @@ Feature: A liquidity provider can place, cancel and update spread orders on the 
     Examples: MM
       | type | unit | data_set | qty | value | hub | product | metal | contract_id | update_qty | update_value |
       | bid | percent | PB4_TestData1 | 2 | 2 | Brisbane | Canadian Maple | Gold | 28 | 7 | 5 |
-
-    #Hello Sam  
