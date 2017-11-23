@@ -4,6 +4,7 @@ ruby '~> 2.3.0'
 # General
 gem 'byebug', '9.1.0'
 gem 'rake', '12.3.0'
+gem 'rubocop', '0.51.0'
 
 # Db Dependencies
 gem 'activerecord', '5.1.3'
