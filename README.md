@@ -15,6 +15,8 @@ Ensure your PATH is extended to the correct ruby gem location in ~/.bash_profile
 
 Once ruby is installed, you will need to install docker to be able to run the exchange with the `orc` repository.
 
+Then install the chromedriver by running `sh install_chromedriver.sh`
+
 ## Running All the Tests
 
 Run `rake`
@@ -52,3 +54,23 @@ The API tests use rspec to declare the testing scenarios and the `httparty` gem 
 
 ## DB Connections
 Active record has been configured in the database folder to allow simple connections to the databases.
+
+## Local Development guide for testers
+
+### Boot local exchange with Orc
+
+Run `docker ps`. If containers are running, follow `turn off` commands
+
+cd orc
+git pull
+npm i
+npm start
+local_start
+
+Navigate to local.bullioncapital.com. See if the it loads correctly within ~2 minutes
+
+### Turn off local exchange
+
+cd orc
+npm start
+local_stop
