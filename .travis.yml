@@ -1,4 +1,3 @@
-# New hosts
 addons:
   hosts:
     - local.bullioncaptial.com
@@ -16,17 +15,6 @@ before_install:
   - echo "127.0.0.1 local-main-socket.bullioncapital.com" | sudo tee --append /etc/hosts
   - echo "127.0.0.1 local-reports-reports.bullioncapital.com" | sudo tee --append /etc/hosts
 
-  # TODO: Hopefully the docker version is correct now
-  # Updating Docker to a compatible version
-  # - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
-  # - sudo usermod -aG docker "$USER"
-
-  # Restarting Docker after update
-  # - sudo service docker stop
-  # - sudo service docker start
-
-  - docker --version
-
   # Install compatible docker compose
   - sudo curl -L https://github.com/docker/compose/releases/download/1.17.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
   - sudo chmod +x /usr/local/bin/docker-compose
@@ -34,8 +22,21 @@ before_install:
   # Docker login to make images available
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker build -t testing .
+
+  # Node
+  - nvm install 8.9
+  - nvm use 8.9
+
+  # Orc Clone
+  - git clone git@github.com:bullioncapital/orc.git
+  - cd orc && npm i && npm run local-noninteractive
+
+  # Sleep for a minute
+  - echo "sleeping to let exchange stabalise"
+  - sleep 60
+
 script:
-  - sh local_start.sh
+  - docker run --net=host testing
 branches:
   only:
     - integration
