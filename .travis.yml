@@ -29,7 +29,7 @@ before_install:
 
   # Orc Clone
   - git clone git@github.com:bullioncapital/orc.git
-  - cd orc && npm i && npm run local-noninteractive
+  - cd orc && npm i && npm run compile && npm run local-noninteractive
 
   # Sleep for a minute
   - echo "sleeping to let exchange stabalise"
