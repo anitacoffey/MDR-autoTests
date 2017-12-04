@@ -29,7 +29,6 @@ before_install:
 
   # Docker login to make images available
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker build -t testing .
   - docker swarm init
 
   # Node
