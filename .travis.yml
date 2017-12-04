@@ -33,9 +33,6 @@ before_install:
 
   # Docker login to make images available
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker-compose pull
-  - docker-compose build
-
   - docker build -t testing .
 script:
   - sh local_start.sh
