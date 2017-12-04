@@ -32,7 +32,7 @@ before_install:
   - sudo chmod +x /usr/local/bin/docker-compose
 
   # Docker login to make images available
-  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker-compose pull
   - docker-compose build
 
