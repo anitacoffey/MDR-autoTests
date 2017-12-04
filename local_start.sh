@@ -8,7 +8,8 @@ nvm install 8.9
 echo node --version
 
 # Local Boot
-cd ../orc && npm i && npm run local-noninteractive
+git clone git@github.com:bullioncapital/orc.git
+cd orc && npm i && npm run local-noninteractive
 
 # Sleep for a minute
 echo "sleeping to let exchange stabalise"
