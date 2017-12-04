@@ -32,6 +32,12 @@ before_install:
   - nvm install 8.9
   - nvm use 8.9
 
+  # Add AWS Creds
+  - mkdir ~/.aws
+  - echo "[default]" >> ~/.aws/credentials
+  - echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> ~/.aws/credentials
+  - echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
+
   # Orc Clone
   - git clone git@github.com:bullioncapital/orc.git
   - cd orc && npm i && npm run compile && npm run local-noninteractive
