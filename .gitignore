@@ -1,4 +1,5 @@
 *.gem
+*.swp
 *.html
 *.log
 *.txt

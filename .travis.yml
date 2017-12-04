@@ -1,0 +1,48 @@
+# New hosts
+addons:
+  hosts:
+    - local.bullioncaptial.com
+    - local-general-socket.bullioncaptial.com
+    - local-main-socket.bullioncaptial.com
+    - local-reports-socket.bullioncaptial.com
+sudo: required
+dist: trusty
+services:
+  - docker
+before_install:
+  # Host file entries to make local.bullioncapital.com available to test suite
+  - echo "127.0.0.1 local.bullioncapital.com" | sudo tee --append /etc/hosts
+  - echo "127.0.0.1 local-general-socket.bullioncapital.com" | sudo tee --append /etc/hosts
+  - echo "127.0.0.1 local-main-socket.bullioncapital.com" | sudo tee --append /etc/hosts
+  - echo "127.0.0.1 local-reports-reports.bullioncapital.com" | sudo tee --append /etc/hosts
+
+  # TODO: Hopefully the docker version is correct now
+  # Updating Docker to a compatible version
+  # - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
+  # - sudo usermod -aG docker "$USER"
+
+  # Restarting Docker after update
+  # - sudo service docker stop
+  # - sudo service docker start
+
+  # Install compatible docker compose
+  - sudo curl -L https://github.com/docker/compose/releases/download/1.17.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+  - chmod +x /usr/local/docker-compose
+
+  # Docker login to make images available
+  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker-compose pull
+  - docker-compose build
+
+  - docker build -t testing .
+script:
+  - sh local_start.sh
+branches:
+  only:
+    - integration
+notifications:
+  email:
+    recipients:
+      - sam.jeston@abx.com
+    on_success: change
+    on_failure: always
