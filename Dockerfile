@@ -26,4 +26,4 @@ RUN gem install bundler
 RUN bundle install
 
 # Run the tests
-CMD HEADLESS=true rake
+CMD rake
