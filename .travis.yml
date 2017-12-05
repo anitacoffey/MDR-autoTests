@@ -73,6 +73,6 @@ branches:
 notifications:
   email:
     recipients:
-      - sam.jeston@abx.com
-    on_success: change
+      - it@abx.com
+    on_success: always
     on_failure: always
