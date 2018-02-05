@@ -15,7 +15,7 @@ Metrics/ClassLength:
 Metrics/BlockLength:
   Enabled: false
 Metrics/ParameterLists:
-  Max: 6
+  Max: 9
 GlobalVars:
   AllowedVariables:
     - $browser

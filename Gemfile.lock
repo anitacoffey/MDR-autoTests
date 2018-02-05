@@ -43,6 +43,7 @@ GEM
       multi_xml (>= 0.5.2)
     i18n (0.9.1)
       concurrent-ruby (~> 1.0)
+    jwt (2.1.0)
     minitest (5.10.3)
     multi_json (1.12.2)
     multi_test (0.1.2)
@@ -97,6 +98,7 @@ DEPENDENCIES
   byebug (= 9.1.0)
   cucumber (= 3.0.2)
   httparty (= 0.15.6)
+  jwt
   mysql2 (= 0.4.9)
   pg (= 0.21.0)
   rake (= 12.3.0)

@@ -18,4 +18,5 @@ gem 'watir', '6.8.4'
 
 # API Test dependencies
 gem 'httparty', '0.15.6'
+gem 'jwt'
 gem 'rspec', '3.7.0'

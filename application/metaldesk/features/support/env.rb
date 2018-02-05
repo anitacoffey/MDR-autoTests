@@ -4,6 +4,7 @@ require 'byebug'
 
 require_relative '../../../../database/database.rb'
 run_context = File.dirname(File.absolute_path(__FILE__))
+Dir.glob(run_context + '/../../../../helpers/**/*.rb') { |file| require_relative file }
 Dir.glob(run_context + '../step_definitions/**/*.rb') { |file| require_relative file }
 Dir.glob(run_context + '../pages/**/*.rb') { |file| require_relative file }
 Dir.glob(run_context + '../hooks/**/*.rb') { |file| require_relative file }
