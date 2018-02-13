@@ -84,6 +84,7 @@ describe 'Fund And Order' do
     # Allow for settlement
     wait_for_full_settlement(pc_uuid, order_id, 'buy', order_placed_at, settlement_amount)
 
+    sleep 30
     pb_account_after_trade = Helper::Balance.find_account_balance(pb_uuid, 1)
     pc_account_after_trade = Helper::Balance.find_account_balance(pc_uuid, 1)
     pc_holdings_after_trade = Helper::Balance.find_holdings_balance(pc_uuid, contract_id.to_i)
@@ -116,6 +117,7 @@ describe 'Fund And Order' do
     # Allow for settlement. Not sure why this settlement is so slow
     wait_for_full_settlement(pc_uuid, order_id, 'sell', order_placed_at, settlement_amount)
 
+    sleep 30
     pb_account_after_trade = Helper::Balance.find_account_balance(pb_uuid, 1)
     pc_account_after_trade = Helper::Balance.find_account_balance(pc_uuid, 1)
     pc_holdings_after_trade = Helper::Balance.find_holdings_balance(pc_uuid, contract_id.to_i)
