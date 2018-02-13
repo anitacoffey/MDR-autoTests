@@ -28,10 +28,8 @@ module Helper
       settled = false
       while settled != true do
         order_matches = self.find_order_matches(order_id, direction)
-        settlement = order_matches.map do |order_match|
-          order_match.statusTypeId == 'settled'
-        end
-        if not settlement.include? false then
+        settlement = order_matches.map { |order_match| order_match.statusTypeId == 'settled' }
+        unless settlement.include? false then
           settled = true
         end
         sleep 1

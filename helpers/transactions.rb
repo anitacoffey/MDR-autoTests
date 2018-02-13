@@ -74,13 +74,12 @@ module Helper
     end
 
     def self.find_cash_transaction_after_time(account_id, transaction_type, created_at)
-      cash_transaction = Db::AbxModules::CashTransaction
+      Db::AbxModules::CashTransaction
           .where(
             accountId: account_id,
             transactionTypeId: transaction_type,
             createdAt: (created_at..Time.now)
           )
-      cash_transaction
     end
 
     def self.wait_on_cash_movement(account_id, transaction_type, created_at)
