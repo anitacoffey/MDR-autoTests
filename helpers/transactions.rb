@@ -89,9 +89,8 @@ module Helper
         cash_transaction = self.find_cash_transaction_after_time(account_id, transaction_type, created_at)
         if cash_transaction.length > 0
           cash_moved = true
-        else
-          sleep 1
         end
+        sleep 1
       end
     end
   end
