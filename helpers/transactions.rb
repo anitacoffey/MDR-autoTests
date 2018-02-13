@@ -72,5 +72,27 @@ module Helper
 
       holdings_balance_history_after.total - holdings_balance_history_before.total
     end
+
+    def self.find_cash_transaction_after_time(account_id, transaction_type, created_at)
+      cash_transaction = Db::AbxModules::CashTransaction
+          .where(
+            accountId: account_id,
+            transactionTypeId: transaction_type,
+            createdAt: (created_at..Time.now)
+          )
+      cash_transaction
+    end
+
+    def self.wait_on_cash_movement(account_id, transaction_type, created_at)
+      cash_moved = false
+      while cash_moved != true do
+        cash_transaction = self.find_cash_transaction_after_time(account_id, transaction_type, created_at)
+        if cash_transaction.length > 0
+          cash_moved = true
+        else
+          sleep 1
+        end
+      end
+    end
   end
 end

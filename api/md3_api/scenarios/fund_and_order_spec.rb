@@ -53,9 +53,11 @@ describe 'Fund And Order' do
 
     r2 = Md3ApiHttp.fund_and_order(pb_uuid, pc_uuid, contract_id, 'buy', 30)
     expect(r2[:code]).to eq(200)
-
+    order_id = r2[:data]['data'][0]['attributes']['orderId']
+    order_placed_at = r2[:data]['data'][0]['attributes']['createdAt']
     # Allow for settlement
-    sleep 1
+    Helper::Order.wait_for_order_settlement(order_id, 'buy')
+    Helper::Transaction.wait_on_cash_movement(pc_uuid, 'Cash Withdrawal', order_placed_at)
 
     pb_account_after_trade = Helper::Balance.find_account_balance(pb_uuid, 1)
     pc_account_after_trade = Helper::Balance.find_account_balance(pc_uuid, 1)
@@ -82,9 +84,12 @@ describe 'Fund And Order' do
 
     r2 = Md3ApiHttp.fund_and_order(pb_uuid, pc_uuid, contract_id, 'sell', 5)
     expect(r2[:code]).to eq(200)
+    order_id = r2[:data]['data'][0]['attributes']['orderId']
+    order_placed_at = r2[:data]['data'][0]['attributes']['createdAt']
 
     # Allow for settlement. Not sure why this settlement is so slow
-    sleep 8
+    Helper::Order.wait_for_order_settlement(order_id, 'sell')
+    Helper::Transaction.wait_on_cash_movement(pc_uuid, 'Cash Withdrawal', order_placed_at)
 
     pb_account_after_trade = Helper::Balance.find_account_balance(pb_uuid, 1)
     pc_account_after_trade = Helper::Balance.find_account_balance(pc_uuid, 1)
