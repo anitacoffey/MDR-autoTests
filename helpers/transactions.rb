@@ -79,21 +79,32 @@ module Helper
             accountId: account_id,
             transactionTypeId: transaction_type,
             createdAt: (created_at..Time.now)
-          )
+      ).order(createdAt: 'DESC')
     end
+
+    def self.find_cash_transaction_before_time(account_id, transaction_type, created_at)
+      Db::AbxModules::CashTransaction
+          .where(
+            accountId: account_id,
+            transactionTypeId: transaction_type,
+            createdAt: ((Time.now - 1.hour)..created_at)
+      ).limit(1)
+    end
+
 
     def self.wait_on_cash_movement(account_id, transaction_type, created_at)
       cash_moved = false
       while cash_moved != true do
-        cash_transaction = self.find_cash_transaction_after_time(account_id, transaction_type, created_at)
-        if cash_transaction.length > 0
-          while cash_moved != true do
-            balance_adjustment = Db::AbxModules::BalanceAdjustment.where(transactionId: cash_transaction[0]["id"])
-            if balance_adjustment.length > 0
-              cash_moved = true
-            end
-            sleep 1
-          end
+        cash_transactions = self.find_cash_transaction_after_time(account_id, transaction_type, created_at)
+        if cash_transactions.length > 0
+          return cash_transactions
+          # while cash_moved != true do
+          #   balance_adjustment = Db::AbxModules::BalanceAdjustment.where(transactionId: cash_transaction[0]["id"])
+          #   if balance_adjustment.length > 0
+          #     cash_moved = true
+          #   end
+          #   sleep 1
+          # end
         end
         sleep 1
       end
