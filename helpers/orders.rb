@@ -33,8 +33,9 @@ module Helper
         end
         if not settlement.include? false then
           settled = true
+        else
+          sleep 1
         end
-        sleep 1
       end
     end
 
