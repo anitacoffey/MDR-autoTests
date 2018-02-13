@@ -88,7 +88,13 @@ module Helper
       while cash_moved != true do
         cash_transaction = self.find_cash_transaction_after_time(account_id, transaction_type, created_at)
         if cash_transaction.length > 0
-          cash_moved = true
+          while cash_moved != true do
+            balance_adjustment = Db::AbxModules::BalanceAdjustment.where(transactionId: cash_transaction[0]["id"])
+            if balance_adjustment.length > 0
+              cash_moved = true
+            end
+            sleep 1
+          end
         end
         sleep 1
       end
