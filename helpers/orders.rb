@@ -23,5 +23,17 @@ module Helper
         Db::AbxModules::OrderMatch.where(sellOrderId: order_id)
       end
     end
+
+    def self.wait_for_order_settlement(order_id, direction)
+      settled = false
+      while settled != true do
+        order_matches = self.find_order_matches(order_id, direction)
+        settlement = order_matches.map { |order_match| order_match.statusTypeId == 'settled' }
+        unless settlement.include? false then
+          settled = true
+        end
+        sleep 1
+      end
+    end
   end
 end

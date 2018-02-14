@@ -2,17 +2,17 @@ require 'httparty'
 
 module Md3ApiHttp
   def self.contracts
-    res = HTTParty.get('https://local.bullioncapital.com/md3api/contracts')
+    res = HTTParty.get('https://local.abx.com/md3api/contracts')
     res['data']
   end
 
   def self.products
-    res = HTTParty.get('https://local.bullioncapital.com/md3api/products')
+    res = HTTParty.get('https://local.abx.com/md3api/products')
     res['data']
   end
 
   def self.depth(marketplace_id)
-    res = HTTParty.get("https://local.bullioncapital.com/md3api/depths?marketplaceId=#{marketplace_id}")
+    res = HTTParty.get("https://local.abx.com/md3api/depths?marketplaceId=#{marketplace_id}")
     res['data']
   end
 
@@ -44,7 +44,7 @@ module Md3ApiHttp
       body[:attributes]['expiry'] = expiry if validity == 'GTD'
     end
 
-    AuthHelper.post(requester_id, 'https://local.bullioncapital.com/md3api/orders', body)
+    AuthHelper.post(requester_id, 'https://local.abx.com/md3api/orders', body)
   end
 
   def self.fund_and_order(requester_id, account_id, contract_id, direction, quantity)
@@ -60,6 +60,6 @@ module Md3ApiHttp
       }
     }
 
-    AuthHelper.post(requester_id, 'https://local.bullioncapital.com/md3api/orders/fund_and_order', body)
+    AuthHelper.post(requester_id, 'https://local.abx.com/md3api/orders/fund_and_order', body)
   end
 end

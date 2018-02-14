@@ -4,13 +4,17 @@ Application and API tests for the MD3 Stack
 ## Getting Started
 Install ruby v2.3. Rbenv is the preferable installation mechanism (https://github.com/rbenv/rbenv).
 
+Run `rbenv install` in this folder (uses a .ruby-version file to manage the versions)
+
+Ensure the correct ruby version is in the environment by calling `rbenv global 2.3.0`. This lets you use all the ruby executables (gem, bundle and ruby itself).
+
 Run `gem install bundler`
 
 Run `bundle install`
  * Some system dependencies will be required. i.e. Mysql and Postgres client libraries.
  * A failed bundle install should prompt the requirements
 
-Ensure your PATH is extended to the correct ruby gem location in ~/.bash_profile by appending the following line
+Ensure your PATH is extended to the correct ruby gem location in ~/.bash_profile by appending the following line (this is unnecessary if you've installed ruby through rbenv and run the `global` command
 `export PATH="/home/sam/.rbenv/versions/2.3.0/bin:$PATH"`
 
 Once ruby is installed, you will need to install docker to be able to run the exchange with the `orc` repository.

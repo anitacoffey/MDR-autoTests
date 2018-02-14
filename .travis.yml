@@ -3,10 +3,10 @@ rvm:
   - 2.3.0
 addons:
   hosts:
-    - local.bullioncaptial.com
-    - local-general-socket.bullioncaptial.com
-    - local-main-socket.bullioncaptial.com
-    - local-reports-socket.bullioncaptial.com
+    - local.abx.com
+    - local-general-socket.abx.com
+    - local-main-socket.abx.com
+    - local-reports-socket.abx.com
   chrome: stable
 sudo: required
 dist: trusty
@@ -14,10 +14,10 @@ services:
   - docker
 before_install:
   # Host file entries to make local.bullioncapital.com available to test suite
-  - echo "127.0.0.1 local.bullioncapital.com" | sudo tee --append /etc/hosts
-  - echo "127.0.0.1 local-general-socket.bullioncapital.com" | sudo tee --append /etc/hosts
-  - echo "127.0.0.1 local-main-socket.bullioncapital.com" | sudo tee --append /etc/hosts
-  - echo "127.0.0.1 local-reports-reports.bullioncapital.com" | sudo tee --append /etc/hosts
+  - echo "127.0.0.1 local.abx.com" | sudo tee --append /etc/hosts
+  - echo "127.0.0.1 local-general-socket.abx.com" | sudo tee --append /etc/hosts
+  - echo "127.0.0.1 local-main-socket.abx.com" | sudo tee --append /etc/hosts
+  - echo "127.0.0.1 local-reports-reports.abx.com" | sudo tee --append /etc/hosts
 
   # Update Docker
   - sudo apt-get update
@@ -49,7 +49,7 @@ before_install:
   # Sleep for a minute
   - echo "sleeping to let exchange stabalise"
   - sleep 60
-  
+
   # Ruby installs
   - gem install bundler
   - bundle install
