@@ -32,41 +32,6 @@ def wait_for_full_settlement(account_id, order_id, order_direction, time_placed,
   end
 end
 
-def print_out_balance_adjustments(pb_account_id, pc_account_id)
-  i = 1
-  loop do
-    break if i == 10
-
-    pb_balance = Db::AbxModules::Balance.where(accountId: pb_account_id, balanceTypeId: 'Account', marketplaceId: 1)
-    pb_bas = Db::AbxModules::BalanceAdjustment.where(balanceId: pb_balance[0].id)
-
-    puts "PB Balance Adjustments - Count #{pb_bas.length} #####################################"
-    pb_js = pb_bas.as_json
-    pb_readable = pb_js.map do |x|
-      x['amount'] = x['amount'].to_f
-      x
-    end
-    puts pb_readable
-    puts '############################################################'
-
-    pc_balance = Db::AbxModules::Balance.where(accountId: pc_account_id, balanceTypeId: 'Account', marketplaceId: 1)
-    pc_bas = Db::AbxModules::BalanceAdjustment.where(balanceId: pc_balance[0].id)
-
-    puts "PC Balance Adjustments  - Count #{pc_bas.length}#####################################"
-    pc_js = pc_bas.as_json
-    pc_readable = pc_js.map do |x|
-      x['amount'] = x['amount'].to_f
-      x
-    end
-    puts pc_readable
-    puts '############################################################'
-
-    i += 1
-
-    sleep 5
-  end
-end
-
 # We lookup the user in all of these specs so that we can authorise the requests to the secure API
 describe 'Fund And Order' do
   it 'throws an error for a contract with no depth' do
@@ -126,8 +91,6 @@ describe 'Fund And Order' do
     pc_account_after_trade = Helper::Balance.find_account_balance(pc_uuid, 1)
     pc_holdings_after_trade = Helper::Balance.find_holdings_balance(pc_uuid, contract_id.to_i)
 
-    print_out_balance_adjustments(pb_uuid, pc_uuid)
-
     expect(pc_account_before_trade.to_f).to eq(pc_account_after_trade.to_f)
     expect(pc_holdings_before_trade + 5).to eq(pc_holdings_after_trade)
     expect(pb_account_before_trade > pb_account_after_trade).to eq(true)
@@ -159,8 +122,6 @@ describe 'Fund And Order' do
     pb_account_after_trade = Helper::Balance.find_account_balance(pb_uuid, 1)
     pc_account_after_trade = Helper::Balance.find_account_balance(pc_uuid, 1)
     pc_holdings_after_trade = Helper::Balance.find_holdings_balance(pc_uuid, contract_id.to_i)
-
-    print_out_balance_adjustments(pb_uuid, pc_uuid)
 
     expect(pc_holdings_before_trade - 5).to eq(pc_holdings_after_trade)
     expect(pc_account_before_trade.to_f).to eq(pc_account_after_trade.to_f)
