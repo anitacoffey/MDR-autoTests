@@ -15,6 +15,7 @@ class TradePage
     @market_order_button = $browser.link(class: 'orderForm__orderType--market')
     @limit_order_button = $browser.link(class: 'orderForm__orderType--limit')
     @order_quantity_control = $browser.fieldset(class: 'orderForm__quantitySpinner').text_field
+    @order_price_control = $browser.fieldset(class: 'orderForm__amountSpinner').text_field
     @review_order_button = $browser.link(text: 'Review Order →')
     @submit_order_button = $browser.link(text: 'Submit Order')
   end
@@ -38,6 +39,8 @@ class TradePage
 
     buy_depth_without_comma.to_f
   end
+
+  attr_reader :order_price_control
 
   attr_reader :left_panel_headers
 
