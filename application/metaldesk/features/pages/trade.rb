@@ -19,6 +19,26 @@ class TradePage
     @submit_order_button = $browser.link(text: 'Submit Order')
   end
 
+  def top_sell_depth
+    top_sell_depth_text = $browser.div(class: 'product-bid-offer').dl(class: 'bid').dd.link.text
+    sell_depth_without_comma = top_sell_depth_text
+      .chars
+      .select {|i| i != ','}
+      .join
+
+    sell_depth_without_comma.to_f
+  end
+
+  def top_buy_depth
+    top_buy_depth_text = $browser.div(class: 'product-bid-offer').dl(class: 'offer').link(class: 'buy').text
+    buy_depth_without_comma = top_buy_depth_text
+      .chars
+      .select {|i| i != ','}
+      .join
+
+    buy_depth_without_comma.to_f
+  end
+
   attr_reader :left_panel_headers
 
   attr_reader :left_panel_contracts

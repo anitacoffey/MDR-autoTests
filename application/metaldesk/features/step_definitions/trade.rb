@@ -57,6 +57,41 @@ And('I place a {string} market order in the selected contract for a quantity of 
   elements.submit_order_button.click
 end
 
+And('I place a {string} limit order in the selected contract for a quantity of {int} at a price {int} away from the top of the depth') do |direction, quantity, distance|
+  elements = TradePage.new
+
+  if direction == 'buy'
+    elements.buy_button.click
+  else
+    elements.sell_button.click
+  end
+
+  # Animations are the worst, this sleep awaits the panel to pop completely
+  sleep 1
+
+  elements.limit_order_button.click
+  elements.order_quantity_control.set(quantity)
+
+  top_of_depth = 0
+  if direction == 'buy'
+    top_of_depth = elements.top_buy_depth
+  else
+    top_of_depth = elements.top_sell_depth
+  end
+
+  byebug
+
+  # TODO: Add logic to read the current value on the top of the correct depth
+
+  # TODO: Add logic to determine what price we want to set the order at
+
+  # TODO: Add logic to input price into the price ozt box
+
+  # TODO: Re-implement
+  # elements.review_order_button.click
+  # elements.submit_order_button.click
+end
+
 And(
   'I validate the matched order in the database '\
   'with order details {int}, {string}, {int}, {string} for the user {string}'
