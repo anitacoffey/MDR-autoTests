@@ -40,6 +40,21 @@ class TradePage
     buy_depth_without_comma.to_f
   end
 
+  def select_client_filter(client_hin)
+    $browser.input(class: 'clientSelect__filterInput').click
+    $browser.span(text: Regexp.new(client_hin)).click 
+  end 
+
+  def select_date_time
+    $browser.link(class: 'orderForm__orderValidity--gtd').click
+    $browser.fieldset(class: 'bc-group datetime-combo').click
+    $browser.div(class: 'picker__nav--next').click
+    #$browser.div(class: 'picker__day picker__day--infocus picker__day--today').tr(index: 2).td(index: 2).click
+    $browser.div(class: 'picker__box').tr(index: 2).td(index: 2).click
+    $browser.fieldset(class:'bc-group datetime-combo').input(class: 'timepicker').click
+    $browser.ul(class: 'picker__list').li(index: 2).click
+  end 
+
   attr_reader :order_price_control
 
   attr_reader :left_panel_headers
