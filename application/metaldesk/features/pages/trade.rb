@@ -23,9 +23,9 @@ class TradePage
   def top_sell_depth
     top_sell_depth_text = $browser.div(class: 'product-bid-offer').dl(class: 'bid').dd.link.text
     sell_depth_without_comma = top_sell_depth_text
-      .chars
-      .select {|i| i != ','}
-      .join
+                               .chars
+                               .reject { |i| i == ',' }
+                               .join
 
     sell_depth_without_comma.to_f
   end
@@ -33,28 +33,28 @@ class TradePage
   def top_buy_depth
     top_buy_depth_text = $browser.div(class: 'product-bid-offer').dl(class: 'offer').link(class: 'buy').text
     buy_depth_without_comma = top_buy_depth_text
-      .chars
-      .select {|i| i != ','}
-      .join
+                              .chars
+                              .reject { |i| i == ',' }
+                              .join
 
     buy_depth_without_comma.to_f
   end
 
   def select_client_filter(client_hin)
     $browser.input(class: 'clientSelect__filterInput').click
-    $browser.span(text: Regexp.new(client_hin)).click 
-  end 
+    $browser.span(text: Regexp.new(client_hin)).click
+  end
 
   def select_date_time
     $browser.link(class: 'orderForm__orderValidity--gtd').click
     $browser.fieldset(class: 'bc-group datetime-combo').click
     $browser.div(class: 'picker__nav--next').click
-    #$browser.div(class: 'picker__day picker__day--infocus picker__day--today').tr(index: 2).td(index: 2).click
-    #$browser.div(class: 'picker__box').tr(index: 2).td(index: 2).click
+    # $browser.div(class: 'picker__day picker__day--infocus picker__day--today').tr(index: 2).td(index: 2).click
+    # $browser.div(class: 'picker__box').tr(index: 2).td(index: 2).click
     $browser.div(class: 'picker__box').click
-    $browser.fieldset(class:'bc-group datetime-combo').input(class: 'timepicker').click
+    $browser.fieldset(class: 'bc-group datetime-combo').input(class: 'timepicker').click
     $browser.ul(class: 'picker__list').li(index: 2).click
-  end 
+  end
 
   attr_reader :order_price_control
 

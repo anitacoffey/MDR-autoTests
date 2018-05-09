@@ -39,8 +39,6 @@ And('I select a contract in {string} of product type {string} and metal type {st
   contract.click
 end
 
-
-
 And('I place a {string} market order in the selected contract for a quantity of {int}') do |direction, quantity|
   elements = TradePage.new
 
@@ -59,11 +57,9 @@ And('I place a {string} market order in the selected contract for a quantity of 
   elements.submit_order_button.click
 end
 
-
-
-
-
-And('I place a {string} market order in the selected contract for a quantity of {int} on behalf of a client {string}') do |direction, quantity, client_data_set|
+And(
+  'I place a {string} market order in the selected contract for a quantity of {int} on behalf of a client {string}'
+) do |direction, quantity, client_data_set|
   elements = TradePage.new
 
   if direction == 'buy'
@@ -72,10 +68,9 @@ And('I place a {string} market order in the selected contract for a quantity of 
     elements.sell_button.click
   end
 
-  select_clients = YamlLoader.user_info(client_data_set) 
+  select_clients = YamlLoader.user_info(client_data_set)
   client_hin = select_clients['hin']
   client_data_set = client_hin
-  
 
   # Animations are the worst, this sleep awaits the panel to pop completely
   sleep 1
@@ -87,14 +82,10 @@ And('I place a {string} market order in the selected contract for a quantity of 
   elements.submit_order_button.click
 end
 
-
-
-
-
-
-
-And('I place a {string} limit order in the selected contract for a quantity of {int} at a price {int} away from '\
-  'the top of the depth on behalf of a client {string}') do |direction, quantity, distance, client_data_set|
+And(
+  'I place a {string} limit order in the selected contract for a quantity of {int} at a price {int} away from '\
+  'the top of the depth on behalf of a client {string}'
+) do |direction, quantity, distance, client_data_set|
   elements = TradePage.new
 
   if direction == 'buy'
@@ -103,7 +94,7 @@ And('I place a {string} limit order in the selected contract for a quantity of {
     elements.sell_button.click
   end
 
-  select_clients = YamlLoader.user_info(client_data_set) 
+  select_clients = YamlLoader.user_info(client_data_set)
   client_hin = select_clients['hin']
   client_data_set = client_hin
 
@@ -114,12 +105,11 @@ And('I place a {string} limit order in the selected contract for a quantity of {
   elements.select_client_filter(client_data_set)
   elements.order_quantity_control.set(quantity)
 
-  top_of_depth = 0
-  if direction == 'buy'
-    top_of_depth = elements.top_buy_depth
-  else
-    top_of_depth = elements.top_sell_depth
-  end
+  top_of_depth = if direction == 'buy'
+                   elements.top_buy_depth
+                 else
+                   elements.top_sell_depth
+                 end
 
   order_price = direction == 'buy' ? top_of_depth - distance : top_of_depth + distance
   elements.order_price_control.set(order_price)
@@ -127,9 +117,10 @@ And('I place a {string} limit order in the selected contract for a quantity of {
   elements.submit_order_button.click
 end
 
-
-
-And('I place a {string} limit order in the selected contract for a quantity of {int} at a price {int} away from the top of the depth') do |direction, quantity, distance|
+And(
+  'I place a {string} limit order in the selected contract for a quantity of {int} '\
+  'at a price {int} away from the top of the depth'
+) do |direction, quantity, distance|
   elements = TradePage.new
 
   if direction == 'buy'
@@ -144,12 +135,11 @@ And('I place a {string} limit order in the selected contract for a quantity of {
   elements.limit_order_button.click
   elements.order_quantity_control.set(quantity)
 
-  top_of_depth = 0
-  if direction == 'buy'
-    top_of_depth = elements.top_buy_depth
-  else
-    top_of_depth = elements.top_sell_depth
-  end
+  top_of_depth = if direction == 'buy'
+                   elements.top_buy_depth
+                 else
+                   elements.top_sell_depth
+                 end
 
   order_price = direction == 'buy' ? top_of_depth - distance : top_of_depth + distance
   elements.order_price_control.set(order_price)
@@ -157,7 +147,10 @@ And('I place a {string} limit order in the selected contract for a quantity of {
   elements.submit_order_button.click
 end
 
-And('I place a {string} limit order in the selected contract for a quantity of {int} at a price {int} away from the top of the depth to be placed for a specific date and time') do |direction, quantity, distance|
+And(
+  'I place a {string} limit order in the selected contract for a quantity of {int} at a price {int} '\
+  'away from the top of the depth to be placed for a specific date and time'
+) do |direction, quantity, distance|
   elements = TradePage.new
 
   if direction == 'buy'
@@ -172,22 +165,18 @@ And('I place a {string} limit order in the selected contract for a quantity of {
   elements.limit_order_button.click
   elements.order_quantity_control.set(quantity)
 
-  top_of_depth = 0
-  if direction == 'buy'
-    top_of_depth = elements.top_buy_depth
-  else
-    top_of_depth = elements.top_sell_depth
-  end
+  top_of_depth = if direction == 'buy'
+                   elements.top_buy_depth
+                 else
+                   elements.top_sell_depth
+                 end
 
   order_price = direction == 'buy' ? top_of_depth - distance : top_of_depth + distance
- #byebug
- elements.order_price_control.set(order_price)
+  elements.order_price_control.set(order_price)
   elements.select_date_time
   elements.review_order_button.click
-  byebug
   elements.submit_order_button.click
 end
-
 
 And(
   'I validate the matched order in the database '\
@@ -260,8 +249,6 @@ And(
   end
 end
 
-
-
 And(
   'I validate the open order in the database '\
   'with order details {int}, {string}, {int}, {string} for the user {string}'
@@ -286,16 +273,3 @@ And(
     raise 'The orders timestamp is incorrect'
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
