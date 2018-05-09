@@ -40,17 +40,25 @@ class TradePage
     buy_depth_without_comma.to_f
   end
 
+  def set_order_price(direction, distance)
+    elements = TradePage.new
+    top_of_depth = if direction == 'buy'
+                     elements.top_buy_depth
+                   else
+                     elements.top_sell_depth
+  end
+    direction == 'buy' ? top_of_depth - distance : top_of_depth + distance
+  end
+
   def select_client_filter(client_hin)
     $browser.input(class: 'clientSelect__filterInput').click
     $browser.span(text: Regexp.new(client_hin)).click
   end
 
-  def select_date_time
+  def select_date_time_in_future
     $browser.link(class: 'orderForm__orderValidity--gtd').click
     $browser.fieldset(class: 'bc-group datetime-combo').click
     $browser.div(class: 'picker__nav--next').click
-    # $browser.div(class: 'picker__day picker__day--infocus picker__day--today').tr(index: 2).td(index: 2).click
-    # $browser.div(class: 'picker__box').tr(index: 2).td(index: 2).click
     $browser.div(class: 'picker__box').click
     $browser.fieldset(class: 'bc-group datetime-combo').input(class: 'timepicker').click
     $browser.ul(class: 'picker__list').li(index: 2).click
