@@ -157,7 +157,7 @@ And('I place a {string} limit order in the selected contract for a quantity of {
   elements.submit_order_button.click
 end
 
-And('I place a {string} limit order in the selected contract for a quantity of {int} to be placed for a specific date and time') do |direction, quantity|
+And('I place a {string} limit order in the selected contract for a quantity of {int} at a price {int} away from the top of the depth to be placed for a specific date and time') do |direction, quantity, distance|
   elements = TradePage.new
 
   if direction == 'buy'
@@ -172,9 +172,19 @@ And('I place a {string} limit order in the selected contract for a quantity of {
   elements.limit_order_button.click
   elements.order_quantity_control.set(quantity)
 
-  elements.order_quantity_control.set(quantity)
+  top_of_depth = 0
+  if direction == 'buy'
+    top_of_depth = elements.top_buy_depth
+  else
+    top_of_depth = elements.top_sell_depth
+  end
+
+  order_price = direction == 'buy' ? top_of_depth - distance : top_of_depth + distance
+ #byebug
+ elements.order_price_control.set(order_price)
   elements.select_date_time
   elements.review_order_button.click
+  byebug
   elements.submit_order_button.click
 end
 
@@ -265,7 +275,6 @@ And(
   account_uuid = Helper::Account.find_account_uuid(username)
   order = Helper::Order.find_order(account_uuid, contract_id, direction, quantity)
 
-  byebug
   raise 'The order is not open' unless order.status == 'submit'
   raise 'The order was of the wrong type' unless order.orderType == order_type
 

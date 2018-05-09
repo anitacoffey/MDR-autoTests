@@ -50,7 +50,8 @@ class TradePage
     $browser.fieldset(class: 'bc-group datetime-combo').click
     $browser.div(class: 'picker__nav--next').click
     #$browser.div(class: 'picker__day picker__day--infocus picker__day--today').tr(index: 2).td(index: 2).click
-    $browser.div(class: 'picker__box').tr(index: 2).td(index: 2).click
+    #$browser.div(class: 'picker__box').tr(index: 2).td(index: 2).click
+    $browser.div(class: 'picker__box').click
     $browser.fieldset(class:'bc-group datetime-combo').input(class: 'timepicker').click
     $browser.ul(class: 'picker__list').li(index: 2).click
   end 
