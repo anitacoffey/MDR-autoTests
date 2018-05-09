@@ -29,7 +29,7 @@ before_install:
   - sudo chmod +x /usr/local/bin/docker-compose
 
   # Docker login to make images available
-  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - echo $DOCKER_PASSWORD | docker login -u="$DOCKER_USERNAME" --password-stdin
   - docker swarm init
 
   # Node

@@ -231,32 +231,7 @@ end
 
 And(
   'I validate the open order in the database '\
-  'with order details {int}, {string}, {int}, {string} for the user {string}'
-) do |contract_id, direction, quantity, order_type, user_set|
-  user = YamlLoader.user_info(user_set)
-  username = user['username']
-
-  # Give the immediate settlement service 2 seconds to create trade transactions for the order
-  sleep 2
-
-  account_uuid = Helper::Account.find_account_uuid(username)
-  order = Helper::Order.find_order(account_uuid, contract_id, direction, quantity)
-
-  raise 'The order is not open' unless order.status == 'submit'
-  raise 'The order was of the wrong type' unless order.orderType == order_type
-
-  # Ensure this is the correct order by making sure it occured in the last 20 seconds
-  order_created = order.createdAt.to_i
-  current_time = Time.now.to_i
-
-  unless order_created.between?(current_time - 20, current_time + 20)
-    raise 'The orders timestamp is incorrect'
-  end
-end
-
-And(
-  'I validate the open order in the database '\
-  'with order details {int}, {string}, {int}, {string} for the user {string} and order valid til {string}'
+  'with order details {int}, {string}, {int}, {string} for the user {string} and order type {string}'
 ) do |contract_id, direction, quantity, order_type, user_set, order_valid_til|
   user = YamlLoader.user_info(user_set)
   username = user['username']
