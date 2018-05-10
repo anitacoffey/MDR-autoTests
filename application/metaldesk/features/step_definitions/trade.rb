@@ -58,6 +58,106 @@ And('I place a {string} market order in the selected contract for a quantity of 
 end
 
 And(
+  'I place a {string} market order in the selected contract for a quantity of {int} on behalf of a client {string}'
+) do |direction, quantity, client_data_set|
+  elements = TradePage.new
+
+  if direction == 'buy'
+    elements.buy_button.click
+  else
+    elements.sell_button.click
+  end
+
+  select_clients = YamlLoader.user_info(client_data_set)
+  client_hin = select_clients['hin']
+  client_data_set = client_hin
+
+  # Animations are the worst, this sleep awaits the panel to pop completely
+  sleep 1
+
+  elements.market_order_button.click
+  elements.select_client_filter(client_data_set)
+  elements.order_quantity_control.set(quantity)
+  elements.review_order_button.click
+  elements.submit_order_button.click
+end
+
+And(
+  'I place a {string} limit order in the selected contract for a quantity of {int} at a price {int} away from '\
+  'the top of the depth on behalf of a client {string}'
+) do |direction, quantity, distance, client_data_set|
+  elements = TradePage.new
+
+  if direction == 'buy'
+    elements.buy_button.click
+  else
+    elements.sell_button.click
+  end
+
+  select_clients = YamlLoader.user_info(client_data_set)
+  client_hin = select_clients['hin']
+  client_data_set = client_hin
+
+  # Animations are the worst, this sleep awaits the panel to pop completely
+  sleep 1
+
+  elements.limit_order_button.click
+  elements.select_client_filter(client_data_set)
+  elements.order_quantity_control.set(quantity)
+  order_price = elements.set_order_price(direction, distance)
+  elements.order_price_control.set(order_price)
+  elements.review_order_button.click
+  elements.submit_order_button.click
+end
+
+And(
+  'I place a {string} limit order in the selected contract for a quantity of {int} '\
+  'at a price {int} away from the top of the depth'
+) do |direction, quantity, distance|
+  elements = TradePage.new
+
+  if direction == 'buy'
+    elements.buy_button.click
+  else
+    elements.sell_button.click
+  end
+
+  # Animations are the worst, this sleep awaits the panel to pop completely
+  sleep 1
+
+  elements.limit_order_button.click
+  elements.order_quantity_control.set(quantity)
+  order_price = elements.set_order_price(direction, distance)
+  elements.order_price_control.set(order_price)
+  elements.review_order_button.click
+  elements.submit_order_button.click
+end
+
+And(
+  'I place a {string} limit order in the selected contract for a quantity of {int} at a price {int} '\
+  'away from the top of the depth to be placed for a specific date and time'
+) do |direction, quantity, distance|
+  elements = TradePage.new
+
+  if direction == 'buy'
+    elements.buy_button.click
+  else
+    elements.sell_button.click
+  end
+
+  # Animations are the worst, this sleep awaits the panel to pop completely
+  sleep 1
+
+  elements.limit_order_button.click
+  elements.order_quantity_control.set(quantity)
+  order_price = elements.set_order_price(direction, distance)
+  elements.order_price_control.set(order_price)
+  elements.select_date_time_in_future
+  elements.review_order_button.click
+  elements.submit_order_button.click
+end
+
+And(
   'I validate the matched order in the database '\
   'with order details {int}, {string}, {int}, {string} for the user {string}'
 ) do |contract_id, direction, quantity, order_type, user_set|
@@ -125,5 +225,31 @@ And(
     unless qty == holdings_balance_movement
       raise 'Trade transaction quantity amount does not match balance movement'
     end
+  end
+end
+
+And(
+  'I validate the open order in the database '\
+  'with order details {int}, {string}, {int}, {string} for the user {string} and order validity {string}'
+) do |contract_id, direction, quantity, order_type, user_set, order_validity |
+  user = YamlLoader.user_info(user_set)
+  username = user['username']
+
+  # Give the immediate settlement service 2 seconds to create trade transactions for the order
+  sleep 2
+
+  account_uuid = Helper::Account.find_account_uuid(username)
+  order = Helper::Order.find_order(account_uuid, contract_id, direction, quantity)
+
+  raise 'The order is not open' unless order.status == 'submit'
+  raise 'The order was of the wrong type' unless order.orderType == order_type
+  raise 'The order was of the wrong validity' unless order.validity == order_validity
+
+  # Ensure this is the correct order by making sure it occured in the last 20 seconds
+  order_created = order.createdAt.to_i
+  current_time = Time.now.to_i
+
+  unless order_created.between?(current_time - 20, current_time + 20)
+    raise 'The orders timestamp is incorrect'
   end
 end

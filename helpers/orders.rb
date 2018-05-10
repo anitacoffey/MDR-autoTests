@@ -26,12 +26,10 @@ module Helper
 
     def self.wait_for_order_settlement(order_id, direction)
       settled = false
-      while settled != true do
-        order_matches = self.find_order_matches(order_id, direction)
+      while settled != true
+        order_matches = find_order_matches(order_id, direction)
         settlement = order_matches.map { |order_match| order_match.statusTypeId == 'settled' }
-        unless settlement.include? false then
-          settled = true
-        end
+        settled = true unless settlement.include? false
         sleep 1
       end
     end
