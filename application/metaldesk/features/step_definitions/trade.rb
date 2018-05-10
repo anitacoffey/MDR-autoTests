@@ -106,7 +106,6 @@ And(
   elements.order_quantity_control.set(quantity)
   order_price = elements.set_order_price(direction, distance)
   elements.order_price_control.set(order_price)
-  elements.order_price_control.set(set_order_price)
   elements.review_order_button.click
   elements.submit_order_button.click
 end
@@ -231,8 +230,8 @@ end
 
 And(
   'I validate the open order in the database '\
-  'with order details {int}, {string}, {int}, {string} for the user {string} and order type {string}'
-) do |contract_id, direction, quantity, order_type, user_set, order_valid_til|
+  'with order details {int}, {string}, {int}, {string} for the user {string} and order validity {string}'
+) do |contract_id, direction, quantity, order_type, user_set, order_validity |
   user = YamlLoader.user_info(user_set)
   username = user['username']
 
@@ -244,7 +243,7 @@ And(
 
   raise 'The order is not open' unless order.status == 'submit'
   raise 'The order was of the wrong type' unless order.orderType == order_type
-  raise 'The order was of the wrong validity' unless order.validity == order_valid_til
+  raise 'The order was of the wrong validity' unless order.validity == order_validity
 
   # Ensure this is the correct order by making sure it occured in the last 20 seconds
   order_created = order.createdAt.to_i
