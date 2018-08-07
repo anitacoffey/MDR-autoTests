@@ -2,9 +2,9 @@ require 'rubygems'
 
 task default: [:all]
 
-task :metaldesk do
+task :MDR do
   sh 'rubocop application database'
-  sh 'cd application/metaldesk/ && cucumber'
+  sh 'cd application/MDR/ && cucumber'
 end
 
 task :md3api do
@@ -17,4 +17,6 @@ task :all do
   Rake::Task[:md3api].execute
   puts 'Executing MetalDesk Tests'
   Rake::Task[:metaldesk].execute
+  puts 'Executing MRD Tests'
+  Rake::Task[:MDR].execute
 end

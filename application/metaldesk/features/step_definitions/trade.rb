@@ -1,45 +1,32 @@
 ####################
 # Step Definitions #
 ####################
-And('I select {string} from the trade panel') do |mode|
-  valid_modes = %w[market watch holdings]
-  valid_mode = valid_modes.select { |m| m == mode }
+And('I select a contract in {string} and metal type {string}') do |hub, metal|
+  valid_hubs = %w[Dubai Hong-Kong London New-York Singapore Sydney Zurich]
+  valid_hub = valid_hubs.select { |h| h == hub }
 
-  if valid_mode.empty?
-    raise "Invalid select mode. Valid selection are #{valid_modes}"
+  if valid_hub.empty?
+    raise "Invalid select hub. Valid selection are #{valid_hubs}"
   end
 
   elements = TradePage.new
-  elements.left_mode_selector.select(mode)
-end
+  #elements.left_filter_toggle.click unless elements.left_product_filters.exists?
 
-And('I select a contract in {string} of product type {string} and metal type {string}') do |hub, product, metal|
-  valid_metals = %w[gold silver platinum]
-  valid_metal = valid_metals.select { |m| m == metal }
-
-  if valid_metal.empty?
-    raise "Invalid select mode. Valid selection are #{valid_modes}"
-  end
-
-  elements = TradePage.new
-  elements.left_filter_toggle.click unless elements.left_product_filters.exists?
-
-  metal_map = {
-    'gold' => 'string:1',
-    'silver' => 'string:2',
-    'platinum' => 'string:3'
+  hub_map = {
+    'Dubai' => 'string:1',
+    'Hong Kong' => 'string:2',
+    'London' => 'string:3'
+    'New York' => 'string:4'
+    'Singapore' => 'string:5'
+    'Sydney' => 'string:6'
+    'Zurich' => 'string:7'
   }
 
-  elements.left_metal_selector.select(metal_map[metal])
-  elements.left_hub_selector.select(hub)
-
-  contract = elements.left_panel_contracts.h2(text: product)
-  raise 'The target contract does not exist in the hub' unless contract.exists?
-
-  contract.click
+  elements.left_metal_selector.select(hub_map[hub])
+  elements.hub_selector.select(hub_map[hub])
 end
 
-And('I place a {string} market order in the selected contract for a quantity of {int}') do |direction, quantity|
+And('I select a product type {string} for that {string} and place a {string} market order for a quantity of {int}') do |product, hub, direction, quantity|
   elements = TradePage.new
 
   if direction == 'buy'
@@ -57,58 +44,10 @@ And('I place a {string} market order in the selected contract for a quantity of 
   elements.submit_order_button.click
 end
 
-And(
-  'I place a {string} market order in the selected contract for a quantity of {int} on behalf of a client {string}'
-) do |direction, quantity, client_data_set|
-  elements = TradePage.new
-
-  if direction == 'buy'
-    elements.buy_button.click
-  else
-    elements.sell_button.click
-  end
-
-  select_clients = YamlLoader.user_info(client_data_set)
-  client_hin = select_clients['hin']
-  client_data_set = client_hin
-
-  # Animations are the worst, this sleep awaits the panel to pop completely
-  sleep 1
-
-  elements.market_order_button.click
-  elements.select_client_filter(client_data_set)
-  elements.order_quantity_control.set(quantity)
-  elements.review_order_button.click
-  elements.submit_order_button.click
-end
-
-And(
-  'I place a {string} limit order in the selected contract for a quantity of {int} at a price {int} away from '\
-  'the top of the depth on behalf of a client {string}'
-) do |direction, quantity, distance, client_data_set|
-  elements = TradePage.new
-
-  if direction == 'buy'
-    elements.buy_button.click
-  else
-    elements.sell_button.click
-  end
-
-  select_clients = YamlLoader.user_info(client_data_set)
-  client_hin = select_clients['hin']
-  client_data_set = client_hin
-
-  # Animations are the worst, this sleep awaits the panel to pop completely
-  sleep 1
-
-  elements.limit_order_button.click
-  elements.select_client_filter(client_data_set)
-  elements.order_quantity_control.set(quantity)
-  order_price = elements.set_order_price(direction, distance)
-  elements.order_price_control.set(order_price)
-  elements.review_order_button.click
-  elements.submit_order_button.click
-end
+#
+#
+#
+#
 
 And(
   'I place a {string} limit order in the selected contract for a quantity of {int} '\
@@ -129,30 +68,6 @@ And(
   elements.order_quantity_control.set(quantity)
   order_price = elements.set_order_price(direction, distance)
   elements.order_price_control.set(order_price)
-  elements.review_order_button.click
-  elements.submit_order_button.click
-end
-
-And(
-  'I place a {string} limit order in the selected contract for a quantity of {int} at a price {int} '\
-  'away from the top of the depth to be placed for a specific date and time'
-) do |direction, quantity, distance|
-  elements = TradePage.new
-
-  if direction == 'buy'
-    elements.buy_button.click
-  else
-    elements.sell_button.click
-  end
-
-  # Animations are the worst, this sleep awaits the panel to pop completely
-  sleep 1
-
-  elements.limit_order_button.click
-  elements.order_quantity_control.set(quantity)
-  order_price = elements.set_order_price(direction, distance)
-  elements.order_price_control.set(order_price)
-  elements.select_date_time_in_future
   elements.review_order_button.click
   elements.submit_order_button.click
 end
