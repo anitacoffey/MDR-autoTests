@@ -7,9 +7,15 @@ And('I select a contract in {string} and metal type {string}') do |hub, metal|
   #elements.left_filter_toggle.click unless elements.left_product_filters.exists?
   if hub == "Dubai"
     elements.dubai_hub.click()
+    if metal == "Gold 1kg Bar 995"
+      elements.buy_kg995_Gold_Dubai.click()
+    elsif metal == "Gold Wholesale AAU 10kg"
+      elements.sell_wholesale_Gold_Dubai.click()
 
 elsif hub == "Hong Kong"
   elements.hongKong_hub.click()
+  if metal == "Gold 10oz Swiss Bar"
+    elements.buy_Swiss_10oz_Gold_HongKong.click()
 
 elsif hub == "London"
   elements.london_hub.click()
@@ -26,6 +32,7 @@ elsif hub == "Sydney"
 elsif hub == "Zurich"
   elements.zurich_hub.click()
 end
+
 
 end
 

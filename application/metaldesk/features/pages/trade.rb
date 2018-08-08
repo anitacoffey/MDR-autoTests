@@ -5,13 +5,13 @@ class TradePage
     @Trade_Gold = $browser.li(class: 'is-active').findElement(By.xPath("//a[@href = 'Gold']")).click()
     @Trade_Silver = $browser.li(class: 'is-active').findElement(By.xPath("//a[@href = 'Silver']")).click()
     @Trade_Platinum = $browser.li(class: 'is-active').findElement(By.xPath("//a[@href = 'Platinum']")).click()
-    @hub_selector = $browser.div(class: 'control').click()
+
     #buy dubai Gold 1kg bar 995 , sell dubai gold Wholesale AAU 10kg
-    @buy_kg995_Gold_Dubai = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/613/trade']")).click()
-    @sell_wholesale_Gold_Dubai = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/639/trade']")).click()
+    @buy_kg995_Gold_Dubai = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/613/trade']"))
+    @sell_wholesale_Gold_Dubai = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/639/trade']"))
     #buy hong kong Swiss Gold 10oz,  sell Hong Kong swiss 100g Gold
-    @buy_Swiss_10oz_Silver_HongKong = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/271/trade']")).click()
-    @sell_Swiss_100g_Silver_HongKong  = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/626/trade']")).click()
+    @buy_Swiss_10oz_Gold_HongKong = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/271/trade']")).click()
+    @sell_Swiss_100g_Gold_HongKong  = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/626/trade']")).click()
     #buy New York 1kg Silver, sell New York 100 oz Silver
     @buy_10oz_Silver_NewYork = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/522/trade']")).click()
     @sell_100g_Silver_NewYork  = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/526/trade']")).click()
