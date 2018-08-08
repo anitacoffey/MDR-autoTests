@@ -24,6 +24,14 @@ class TradePage
     #buy sell Zurich platinum
     @buy_kg_Platinum_Zurich = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/552/trade']")).click()
 
+    @dubai_hub = $browser.div(class: 'control').findElement(By.value("32"))
+    @hongKong_hub = $browser.div(class: 'control').findElement(By.value("23"))
+    @london_hub = $browser.div(class: 'control').findElement(By.value("28"))
+    @newYork_hub = $browser.div(class: 'control').findElement(By.value("27"))
+    @singapore_hub = $browser.div(class: 'control').findElement(By.value("22"))
+    @syndey_hub = $browser.div(class: 'control').findElement(By.value("25"))
+    @zurich_hub = $browser.div(class: 'control').findElement(By.value("29"))
+
     @order_panel = $browser.div(class: 'column is-half')
     @market_order_button = @order_panel.button(text: 'Market').click()
     @market_order = $browser.findElement(By.name('Market'))

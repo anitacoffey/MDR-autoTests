@@ -2,28 +2,31 @@
 # Step Definitions #
 ####################
 And('I select a contract in {string} and metal type {string}') do |hub, metal|
-  valid_hubs = %w[Dubai Hong-Kong London New-York Singapore Sydney Zurich]
-  valid_hub = valid_hubs.select { |h| h == hub }
-
-  if valid_hub.empty?
-    raise "Invalid select hub. Valid selection are #{valid_hubs}"
-  end
 
   elements = TradePage.new
   #elements.left_filter_toggle.click unless elements.left_product_filters.exists?
+  if hub == "Dubai"
+    elements.dubai_hub.click()
 
-  hub_map = {
-    'Dubai' => 'string:1',
-    'Hong Kong' => 'string:2',
-    'London' => 'string:3'
-    'New York' => 'string:4'
-    'Singapore' => 'string:5'
-    'Sydney' => 'string:6'
-    'Zurich' => 'string:7'
-  }
+elsif hub == "Hong Kong"
+  elements.hongKong_hub.click()
 
-  elements.left_metal_selector.select(hub_map[hub])
-  elements.hub_selector.select(hub_map[hub])
+elsif hub == "London"
+  elements.london_hub.click()
+
+elsif hub == "New York"
+  elements.newYork_hub.click()
+
+elsif hub == "Singapore"
+  elements.singapore_hub.click()
+
+elsif hub == "Sydney"
+  elements.sydney_hub.click()
+
+elsif hub == "Zurich"
+  elements.zurich_hub.click()
+end
+
 end
 
 And('I select a product type {string} for that {string} and place a {string} market order for a quantity of {int}') do |product, hub, direction, quantity|
