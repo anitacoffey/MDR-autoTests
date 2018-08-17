@@ -1,28 +1,28 @@
 # This page is a work in progress. Many trade elements are yet to be added
 class TradePage
   def initialize
-    @Trade_Button = $browser.div(class: 'navbar-item').findElement(By.xPath("//a[@href = 'trade']")).click()
-    @Trade_Gold = $browser.li(class: 'is-active').findElement(By.xPath("//a[@href = 'Gold']")).click()
-    @Trade_Silver = $browser.li(class: 'is-active').findElement(By.xPath("//a[@href = 'Silver']")).click()
-    @Trade_Platinum = $browser.li(class: 'is-active').findElement(By.xPath("//a[@href = 'Platinum']")).click()
+    @Trade_Button = $browser.div(class: 'navbar-item').findElement(By.xPath("//a[@href = 'trade']"))
+    @Trade_Gold = $browser.li(class: 'is-active').findElement(By.xPath("//a[@href = 'Gold']"))
+    @Trade_Silver = $browser.li(class: 'is-active').findElement(By.xPath("//a[@href = 'Silver']"))
+    @Trade_Platinum = $browser.li(class: 'is-active').findElement(By.xPath("//a[@href = 'Platinum']"))
 
     #buy dubai Gold 1kg bar 995 , sell dubai gold Wholesale AAU 10kg
     @buy_kg995_Gold_Dubai = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/613/trade']"))
     @sell_wholesale_Gold_Dubai = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/639/trade']"))
     #buy hong kong Swiss Gold 10oz,  sell Hong Kong swiss 100g Gold
-    @buy_Swiss_10oz_Gold_HongKong = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/271/trade']")).click()
-    @sell_Swiss_100g_Gold_HongKong  = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/626/trade']")).click()
+    @buy_Swiss_10oz_Gold_HongKong = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/271/trade']"))
+    @sell_Swiss_100g_Gold_HongKong  = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/626/trade']"))
     #buy New York 1kg Silver, sell New York 100 oz Silver
-    @buy_10oz_Silver_NewYork = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/522/trade']")).click()
-    @sell_100g_Silver_NewYork  = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/526/trade']")).click()
+    @buy_1kg_Silver_NewYork = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/522/trade']"))
+    @sell_100oz_Silver_NewYork  = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/526/trade']"))
     #buy Singapore Wholesale AAG 25000 oz Silver
-    @buy_Wholesale_Silver_Singapore = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/522/trade']")).click()
-    #buy sell London 1Kg platinum
-    @buy_kg_Platinum_London = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/549/trade']")).click()
+    @buy_Wholesale_Silver_Singapore = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/522/trade']"))
+    #buy London 1Kg platinum
+    @buy_kg_Platinum_London = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/549/trade']"))
     #buy sell Syndey platinum
-    @sell_kg_Platinum_Sydney = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/324/trade']")).click()
+    @sell_kg_Platinum_Sydney = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/324/trade']"))
     #buy sell Zurich platinum
-    @buy_kg_Platinum_Zurich = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/552/trade']")).click()
+    @buy_kg_Platinum_Zurich = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/552/trade']"))
 
     @dubai_hub = $browser.div(class: 'control').findElement(By.value("32"))
     @hongKong_hub = $browser.div(class: 'control').findElement(By.value("23"))
@@ -33,11 +33,11 @@ class TradePage
     @zurich_hub = $browser.div(class: 'control').findElement(By.value("29"))
 
     @order_panel = $browser.div(class: 'column is-half')
-    @market_order_button = @order_panel.button(text: 'Market').click()
+    @market_order_button = @order_panel.button(text: 'Market')
     @market_order = $browser.findElement(By.name('Market'))
-    @limit_order_button = @order_panel.button(class: 'Limit').click()
-    @cancel_button = $browser.div(text: 'button is-danger').click()
-    @confirm_button = $browser.div(text: 'button is-success').click()
+    @limit_order_button = @order_panel.button(class: 'Limit')
+    @cancel_button = $browser.div(text: 'button is-danger').findElement(By.text("Cancel"))
+    @confirm_button = $browser.div(text: 'button is-success').findElement(By.text("Confirm"))
     @order_quantity_control = $browser.td(name: 'amount').text_field
     # @left_panel_headers = $browser.div(class: ['column-headers', 'left'])
     # @left_panel_contracts = $browser.div(class: 'left-col')

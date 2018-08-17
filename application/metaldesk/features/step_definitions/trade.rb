@@ -1,63 +1,87 @@
 ####################
 # Step Definitions #
 ####################
-And('I select a contract in {string} and metal type {string}') do |hub, metal|
-
+And('I select a contract in {string} and metal type {string}') do |hub, metal, direction, product|
   elements = TradePage.new
-  #elements.left_filter_toggle.click unless elements.left_product_filters.exists?
-  if hub == "Dubai"
+
+  if metal == 'gold'
+    elements.Trade_Gold.click()
+    if hub == 'Dubai'
     elements.dubai_hub.click()
-    if metal == "Gold 1kg Bar 995"
+    if direction == 'buy' && product == '1 kg Bar 995'
       elements.buy_kg995_Gold_Dubai.click()
-    elsif metal == "Gold Wholesale AAU 10kg"
+    elsif direction == 'sell' && product == 'Wholesale AAU 10 kg'
       elements.sell_wholesale_Gold_Dubai.click()
+  elsif hub == 'Hong Kong'
+      elements.hongKong_hub.click()
+    if direction == 'buy' && product == 'Gold 10 oz Swiss'
+      elements.buy_Swiss_10oz_Gold_HongKong.click()
+    elsif direction == 'sell' && product == 'Gold 100g Swiss'
+      elements.sell_Swiss_100g_Gold_HongKong.click()
+    end
 
-elsif hub == "Hong Kong"
-  elements.hongKong_hub.click()
-  if metal == "Gold 10oz Swiss Bar"
-    elements.buy_Swiss_10oz_Gold_HongKong.click()
+  if metal == 'silver'
+    elements.Trade_Silver.click()
+    if hub == 'New York'
+      elements.newYork_hub.click()
+    if direction == 'buy' && product == 'Silver 1 kg bar'
+      elements.buy_1kg_Silver_NewYork.click()
+    elsif direction == 'sell' && product == 'Silver 100 oz Bar'
+      elements.sell_100oz_Silver_NewYork.click()
+    if hub == 'Singapore'
+      elements.singapore_hub.click()
+    if direction == 'sell' && product == 'Wholesale AAG 25,000 oz'
+       elements.buy_Wholesale_Silver_Singapore.click()
+    end
 
-elsif hub == "London"
-  elements.london_hub.click()
-
-elsif hub == "New York"
-  elements.newYork_hub.click()
-
-elsif hub == "Singapore"
-  elements.singapore_hub.click()
-
-elsif hub == "Sydney"
-  elements.sydney_hub.click()
-
-elsif hub == "Zurich"
-  elements.zurich_hub.click()
+  if metal == 'platinum'
+    if hub == 'London'
+      elements.london_hub.click()
+     if direction == 'buy' && product == 'Platinum 1kg Bar'
+      elements.buy_kg_Platinum_London.click()
+    if hub == 'Sydney'
+      elements.sydney_hub.click()
+     if direction == 'sell' && product == 'Platinum 1kg Bar'
+      elements.sell_kg_Platinum_Sydney.click()
+    if hub == 'Zurich'
+      elements.zurich_hub.click()
+    if direction == 'buy' && product == 'Platinum 1kg Bar'
+      elements.buy_kg_Platinum_Zurich.click()
+      end
 end
 
-
-end
-
-And('I select a product type {string} for that {string} and place a {string} market order for a quantity of {int}') do |product, hub, direction, quantity|
+And('I select a product type {string} and place a {string} market order') do |product, direction|
   elements = TradePage.new
 
-  if direction == 'buy'
-    elements.buy_button.click
-  else
-    elements.sell_button.click
-  end
-
-  # Animations are the worst, this sleep awaits the panel to pop completely
-  sleep 1
-
-  elements.market_order_button.click
-  elements.order_quantity_control.set(quantity)
-  elements.review_order_button.click
-  elements.submit_order_button.click
+  if direction == 'buy' && product == '1 kg Bar 995'
+    elements.buy_kg995_Gold_Dubai.click()
+  elsif direction == 'sell' && product == 'Wholesale AAU 10 kg'
+    elements.sell_wholesale_Gold_Dubai.click()
+    elsif direction == 'buy' && product == 'Gold 10 oz Swiss'
+      elements.buy_Swiss_10oz_Gold_HongKong.click()
+    elsif direction == 'sell' && product == 'Gold 100g Swiss'
+      elements.sell_Swiss_100g_Gold_HongKong.click()
+    elsif direction == 'buy' && product == 'Silver 1 kg bar'
+      elements.buy_1kg_Silver_NewYork.click()
+    elsif direction == 'sell' && product == 'Silver 100 oz Bar'
+      elements.sell_100oz_Silver_NewYork.click()
+    elsif direction == 'sell' && product == 'Wholesale AAG 25,000 oz'
+       elements.buy_Wholesale_Silver_Singapore.click()
+    elsif direction == 'buy' && product == 'Platinum 1kg Bar'
+      elements.buy_kg_Platinum_London.click()
+    elsif direction == 'sell' && product == 'Platinum 1kg Bar'
+      elements.sell_kg_Platinum_Sydney.click()
+    elsif direction == 'buy' && product == 'Platinum 1kg Bar' #???
+      elements.buy_kg_Platinum_Zurich.click()
 end
 
-#
-#
-#
-#
+And(
+  'I set a quantity of {int}'
+) do |quantity|
+elements = TradePage.new
+elements.order_quantity_control.set(quantity)
+elements.confirm_button.click()
+end
 
 And(
   'I place a {string} limit order in the selected contract for a quantity of {int} '\
