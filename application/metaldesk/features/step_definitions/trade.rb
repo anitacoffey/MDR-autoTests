@@ -1,78 +1,152 @@
 ####################
 # Step Definitions #
 ####################
-And('I select a contract in {string} and metal type {string}') do |hub, metal, direction, product|
+And(
+  'I select a metal type {string}'
+  ) do |metal|
   elements = TradePage.new
 
   if metal == 'gold'
-    elements.Trade_Gold.click()
-    if hub == 'Dubai'
-    elements.dubai_hub.click()
-    if direction == 'buy' && product == '1 kg Bar 995'
-      elements.buy_kg995_Gold_Dubai.click()
-    elsif direction == 'sell' && product == 'Wholesale AAU 10 kg'
-      elements.sell_wholesale_Gold_Dubai.click()
-  elsif hub == 'Hong Kong'
-      elements.hongKong_hub.click()
-    if direction == 'buy' && product == 'Gold 10 oz Swiss'
-      elements.buy_Swiss_10oz_Gold_HongKong.click()
-    elsif direction == 'sell' && product == 'Gold 100g Swiss'
-      elements.sell_Swiss_100g_Gold_HongKong.click()
-    end
-
-  if metal == 'silver'
-    elements.Trade_Silver.click()
-    if hub == 'New York'
-      elements.newYork_hub.click()
-    if direction == 'buy' && product == 'Silver 1 kg bar'
-      elements.buy_1kg_Silver_NewYork.click()
-    elsif direction == 'sell' && product == 'Silver 100 oz Bar'
-      elements.sell_100oz_Silver_NewYork.click()
-    if hub == 'Singapore'
-      elements.singapore_hub.click()
-    if direction == 'sell' && product == 'Wholesale AAG 25,000 oz'
-       elements.buy_Wholesale_Silver_Singapore.click()
-    end
-
-  if metal == 'platinum'
-    if hub == 'London'
-      elements.london_hub.click()
-     if direction == 'buy' && product == 'Platinum 1kg Bar'
-      elements.buy_kg_Platinum_London.click()
-    if hub == 'Sydney'
-      elements.sydney_hub.click()
-     if direction == 'sell' && product == 'Platinum 1kg Bar'
-      elements.sell_kg_Platinum_Sydney.click()
-    if hub == 'Zurich'
-      elements.zurich_hub.click()
-    if direction == 'buy' && product == 'Platinum 1kg Bar'
-      elements.buy_kg_Platinum_Zurich.click()
-      end
+    metal_selector = elements.Trade_Gold
+  elsif metal == 'silver'
+    metal_selector = elements.Trade_Silver
+  elsif metal == 'platinum'
+    metal_selector = elements.Trade_Platinum
+end
+metal_selector.click()
 end
 
-And('I select a product type {string} and place a {string} market order') do |product, direction|
+And(
+  'I select a contract in {string}'
+) do |hub|
   elements = TradePage.new
 
-  if direction == 'buy' && product == '1 kg Bar 995'
-    elements.buy_kg995_Gold_Dubai.click()
-  elsif direction == 'sell' && product == 'Wholesale AAU 10 kg'
-    elements.sell_wholesale_Gold_Dubai.click()
-    elsif direction == 'buy' && product == 'Gold 10 oz Swiss'
-      elements.buy_Swiss_10oz_Gold_HongKong.click()
-    elsif direction == 'sell' && product == 'Gold 100g Swiss'
-      elements.sell_Swiss_100g_Gold_HongKong.click()
-    elsif direction == 'buy' && product == 'Silver 1 kg bar'
-      elements.buy_1kg_Silver_NewYork.click()
-    elsif direction == 'sell' && product == 'Silver 100 oz Bar'
-      elements.sell_100oz_Silver_NewYork.click()
-    elsif direction == 'sell' && product == 'Wholesale AAG 25,000 oz'
-       elements.buy_Wholesale_Silver_Singapore.click()
-    elsif direction == 'buy' && product == 'Platinum 1kg Bar'
-      elements.buy_kg_Platinum_London.click()
-    elsif direction == 'sell' && product == 'Platinum 1kg Bar'
-      elements.sell_kg_Platinum_Sydney.click()
-    elsif direction == 'buy' && product == 'Platinum 1kg Bar' #???
-      elements.buy_kg_Platinum_Zurich.click()
+  if hub == 'Dubai'
+    hub_selector = elements.dubai_hub
+  elsif hub == 'Hong Kong'
+    hub_selector = elements.hongKong_hub
+  elsif hub == 'New York'
+    hub_selector = elements.newYork_hub
+  elsif hub == 'Singapore'
+    hub_selector = elements.singapore_hub
+  elsif hub == 'London'
+    hub_selector = elements.london_hub
+  elsif hub == 'Sydney'
+    hub_selector = elements.sydney_hub
+  elsif hub == 'Zurich'
+    hub_selector = elements.zurich_hub
+end
+hub_selector.click()
+end
+
+# And('I select a contract in {string} and metal type {string}') do |hub, metal, direction, product|
+#   elements = TradePage.new
+
+#   if metal == 'gold'
+#     elements.Trade_Gold.click()
+#     if hub == 'Dubai'
+#       elements.dubai_hub.click()
+#     if direction == 'buy' && product == '1 kg Bar 995'
+#       elements.buy_kg995_Gold_Dubai.click()
+#     elsif direction == 'sell' && product == 'Wholesale AAU 10 kg'
+#       elements.sell_wholesale_Gold_Dubai.click()
+#   elsif hub == 'Hong Kong'
+#       elements.hongKong_hub.click()
+#     if direction == 'buy' && product == 'Gold 10 oz Swiss'
+#       elements.buy_Swiss_10oz_Gold_HongKong.click()
+#     elsif direction == 'sell' && product == 'Gold 100g Swiss'
+#       elements.sell_Swiss_100g_Gold_HongKong.click()
+#   end
+
+#   if metal == 'silver'
+#     elements.Trade_Silver.click()
+#     if hub == 'New York'
+#       elements.newYork_hub.click()
+#     if direction == 'buy' && product == 'Silver 1 kg bar'
+#       elements.buy_1kg_Silver_NewYork.click()
+#     elsif direction == 'sell' && product == 'Silver 100 oz Bar'
+#       elements.sell_100oz_Silver_NewYork.click()
+#     if hub == 'Singapore'
+#       elements.singapore_hub.click()
+#     if direction == 'sell' && product == 'Wholesale AAG 25,000 oz'
+#        elements.buy_Wholesale_Silver_Singapore.click()
+#   end
+
+#   if metal == 'platinum'
+#     elements.Trade_Platinum.click()
+#     if hub == 'London'
+#       elements.london_hub.click()
+#       if direction == 'buy' && product == 'Platinum 1kg Bar'
+#       elements.buy_kg_Platinum_London.click()
+#     if hub == 'Sydney'
+#       elements.sydney_hub.click()
+#       if direction == 'sell' && product == 'Platinum 1kg Bar'
+#       elements.sell_kg_Platinum_Sydney.click()
+#     if hub == 'Zurich'
+#       elements.zurich_hub.click()
+#       if direction == 'buy' && product == 'Platinum 1kg Bar'
+#       elements.buy_kg_Platinum_Zurich.click()
+#  end
+# end
+
+# And('I select a product type {string} and place a {string} market order') do |product, direction|
+#   elements = TradePage.new
+
+#   if direction == 'buy' && product == '1 kg Bar 995'
+#     elements.buy_kg995_Gold_Dubai.click()
+#   elsif direction == 'sell' && product == 'Wholesale AAU 10 kg'
+#     elements.sell_wholesale_Gold_Dubai.click()
+#     elsif direction == 'buy' && product == 'Gold 10 oz Swiss'
+#       elements.buy_Swiss_10oz_Gold_HongKong.click()
+#     elsif direction == 'sell' && product == 'Gold 100g Swiss'
+#       elements.sell_Swiss_100g_Gold_HongKong.click()
+#     elsif direction == 'buy' && product == 'Silver 1 kg bar'
+#       elements.buy_1kg_Silver_NewYork.click()
+#     elsif direction == 'sell' && product == 'Silver 100 oz Bar'
+#       elements.sell_100oz_Silver_NewYork.click()
+#     elsif direction == 'sell' && product == 'Wholesale AAG 25,000 oz'
+#        elements.buy_Wholesale_Silver_Singapore.click()
+#     elsif direction == 'buy' && product == 'Platinum 1kg Bar'
+#       elements.buy_kg_Platinum_London.click()
+#     elsif direction == 'sell' && product == 'Platinum 1kg Bar'
+#       elements.sell_kg_Platinum_Sydney.click()
+#     elsif direction == 'buy' && product == 'Platinum 1kg Bar' #???
+#       elements.buy_kg_Platinum_Zurich.click()
+# end
+
+And('I place a {string} market order for that {string}') do |direction, hub|
+  elements = TradePage.new
+
+  if direction == 'buy' && hub == 'Dubai'
+    trade_metal = elements.buy_Gold_Dubai
+  elsif direction == 'sell' && hub == 'Dubai'
+    trade_metal = elements.sell_Gold_Dubai
+    elsif direction == 'buy' && hub == 'Hong Kong'
+      trade_metal = elements.buy_Gold_HongKong
+    elsif direction == 'sell' && hub == 'Hong Kong'
+      trade_metal = elements.sell_Gold_HongKong
+    elsif direction == 'buy' && hub == 'New York'
+      trade_metal = elements.buy_Silver_NewYork
+    elsif direction == 'sell' && hub == 'New York'
+      trade_metal = elements.sell_Silver_NewYork
+    elsif direction == 'buy' && hub == 'Singapore'
+      trade_metal = elements.buy_Silver_Singapore
+    elsif direction == 'sell' && hub == 'Singapore'
+      trade_metal = elements.sell_Silver_Singapore
+    elsif direction == 'buy' && hub == 'London'
+      trade_metal = elements.buy_latinum_London
+    elsif direction == 'sell' && hub == 'London'
+      trade_metal = elements.sell_Platinum_London
+    elsif direction == 'buy' && hub == 'Sydney'
+      trade_metal = elements.buy_Platinum_Sydney
+    elsif direction == 'sell' && hub == 'Sydney'
+      trade_metal = elements.sell_Platinum_Sydney
+    elsif direction == 'buy' && hub == 'Zuirch'
+      trade_metal = elements.buy_kg_Platinum_Zurich
+    elsif direction == 'sell' && hub == 'Zuirch'
+      trade_metal = elements.sell_Platinum_Zurich
+end
+trade_metal.click()
 end
 
 And(

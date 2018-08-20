@@ -23,6 +23,25 @@ class TradePage
     @sell_kg_Platinum_Sydney = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/324/trade']"))
     #buy sell Zurich platinum
     @buy_kg_Platinum_Zurich = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/552/trade']"))
+    #Select first buy / sell in the list
+    #Gold = dubai/ hongkong
+    #Silver = New York, Singapore
+    #Platinum = London, Sydney, Zurich
+    @buy_Gold_Dubai = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/613/trade']"))
+    @sell_Gold_Dubai = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/613/trade']"))
+    @buy_Gold_HongKong = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/264/trade']"))
+    @sell_Gold_HongKong  = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/264/trade']"))
+    @buy_Silver_NewYork = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/522/trade']"))
+    @sell_Silver_NewYork  = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/522/trade']"))
+    @buy_Silver_Singapore = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/251/trade']"))
+    @sell_Silver_Singapore  = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/251/trade']"))
+    @buy_Platinum_London = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/549/trade']"))
+    @sell_Platinum_London = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/549/trade']"))
+    @buy_Platinum_Sydney = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/324/trade']"))
+    @sell_Platinum_Sydney = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/324/trade']"))
+    @buy_Platinum_Zurich = $browser.div(class: 'button is-success').findElement(By.xPath("//a[@href = 'trade/552/trade']"))
+    @sell_Platinum_Zurich = $browser.div(class: 'button is-danger').findElement(By.xPath("//a[@href = 'trade/552/trade']"))
+
 
     @dubai_hub = $browser.div(class: 'control').findElement(By.value("32"))
     @hongKong_hub = $browser.div(class: 'control').findElement(By.value("23"))

@@ -1,6 +1,6 @@
 # Highjacked uat env to work on local because there are other thinkgs that look-up specifically to 'uat' using the TEST_ENV variable
 local:
-  url: https://local.abx.com/
+  url: https://mobile-local.abx.com/
 
 uat-live:
-  url: https://uat-live-exchange.abx.com/
+  url: https://mobile-uat-live-exchange.abx.com/
