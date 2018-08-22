@@ -1,160 +1,113 @@
 ####################
 # Step Definitions #
 ####################
-And(
-  'I select a metal type {string}'
-  ) do |metal|
+And('I select {string} from the trade panel') do |mode|
+  valid_modes = %w[market watch holdings]
+  valid_mode = valid_modes.select { |m| m == mode }
+
+  if valid_mode.empty?
+    raise "Invalid select mode. Valid selection are #{valid_modes}"
+  end
+
+  elements = TradePage.new
+  elements.left_mode_selector.select(mode)
+end
+
+And('I select a contract in {string} of product type {string} and metal type {string}') do |hub, product, metal|
+  valid_metals = %w[gold silver platinum]
+  valid_metal = valid_metals.select { |m| m == metal }
+
+  if valid_metal.empty?
+    raise "Invalid select mode. Valid selection are #{valid_modes}"
+  end
+
+  elements = TradePage.new
+  elements.left_filter_toggle.click unless elements.left_product_filters.exists?
+
+  metal_map = {
+    'gold' => 'string:1',
+    'silver' => 'string:2',
+    'platinum' => 'string:3'
+  }
+
+  elements.left_metal_selector.select(metal_map[metal])
+  elements.left_hub_selector.select(hub)
+
+  contract = elements.left_panel_contracts.h2(text: product)
+  raise 'The target contract does not exist in the hub' unless contract.exists?
+
+  contract.click
+end
+
+And('I place a {string} market order in the selected contract for a quantity of {int}') do |direction, quantity|
   elements = TradePage.new
 
-  if metal == 'gold'
-    metal_selector = elements.Trade_Gold
-  elsif metal == 'silver'
-    metal_selector = elements.Trade_Silver
-  elsif metal == 'platinum'
-    metal_selector = elements.Trade_Platinum
-end
-metal_selector.click()
-end
+  if direction == 'buy'
+    elements.buy_button.click
+  else
+    elements.sell_button.click
+  end
 
-And(
-  'I select a contract in {string}'
-) do |hub|
-  elements = TradePage.new
+  # Animations are the worst, this sleep awaits the panel to pop completely
+  sleep 1
 
-  if hub == 'Dubai'
-    hub_selector = elements.dubai_hub
-  elsif hub == 'Hong Kong'
-    hub_selector = elements.hongKong_hub
-  elsif hub == 'New York'
-    hub_selector = elements.newYork_hub
-  elsif hub == 'Singapore'
-    hub_selector = elements.singapore_hub
-  elsif hub == 'London'
-    hub_selector = elements.london_hub
-  elsif hub == 'Sydney'
-    hub_selector = elements.sydney_hub
-  elsif hub == 'Zurich'
-    hub_selector = elements.zurich_hub
-end
-hub_selector.click()
-end
-
-# And('I select a contract in {string} and metal type {string}') do |hub, metal, direction, product|
-#   elements = TradePage.new
-
-#   if metal == 'gold'
-#     elements.Trade_Gold.click()
-#     if hub == 'Dubai'
-#       elements.dubai_hub.click()
-#     if direction == 'buy' && product == '1 kg Bar 995'
-#       elements.buy_kg995_Gold_Dubai.click()
-#     elsif direction == 'sell' && product == 'Wholesale AAU 10 kg'
-#       elements.sell_wholesale_Gold_Dubai.click()
-#   elsif hub == 'Hong Kong'
-#       elements.hongKong_hub.click()
-#     if direction == 'buy' && product == 'Gold 10 oz Swiss'
-#       elements.buy_Swiss_10oz_Gold_HongKong.click()
-#     elsif direction == 'sell' && product == 'Gold 100g Swiss'
-#       elements.sell_Swiss_100g_Gold_HongKong.click()
-#   end
-
-#   if metal == 'silver'
-#     elements.Trade_Silver.click()
-#     if hub == 'New York'
-#       elements.newYork_hub.click()
-#     if direction == 'buy' && product == 'Silver 1 kg bar'
-#       elements.buy_1kg_Silver_NewYork.click()
-#     elsif direction == 'sell' && product == 'Silver 100 oz Bar'
-#       elements.sell_100oz_Silver_NewYork.click()
-#     if hub == 'Singapore'
-#       elements.singapore_hub.click()
-#     if direction == 'sell' && product == 'Wholesale AAG 25,000 oz'
-#        elements.buy_Wholesale_Silver_Singapore.click()
-#   end
-
-#   if metal == 'platinum'
-#     elements.Trade_Platinum.click()
-#     if hub == 'London'
-#       elements.london_hub.click()
-#       if direction == 'buy' && product == 'Platinum 1kg Bar'
-#       elements.buy_kg_Platinum_London.click()
-#     if hub == 'Sydney'
-#       elements.sydney_hub.click()
-#       if direction == 'sell' && product == 'Platinum 1kg Bar'
-#       elements.sell_kg_Platinum_Sydney.click()
-#     if hub == 'Zurich'
-#       elements.zurich_hub.click()
-#       if direction == 'buy' && product == 'Platinum 1kg Bar'
-#       elements.buy_kg_Platinum_Zurich.click()
-#  end
-# end
-
-# And('I select a product type {string} and place a {string} market order') do |product, direction|
-#   elements = TradePage.new
-
-#   if direction == 'buy' && product == '1 kg Bar 995'
-#     elements.buy_kg995_Gold_Dubai.click()
-#   elsif direction == 'sell' && product == 'Wholesale AAU 10 kg'
-#     elements.sell_wholesale_Gold_Dubai.click()
-#     elsif direction == 'buy' && product == 'Gold 10 oz Swiss'
-#       elements.buy_Swiss_10oz_Gold_HongKong.click()
-#     elsif direction == 'sell' && product == 'Gold 100g Swiss'
-#       elements.sell_Swiss_100g_Gold_HongKong.click()
-#     elsif direction == 'buy' && product == 'Silver 1 kg bar'
-#       elements.buy_1kg_Silver_NewYork.click()
-#     elsif direction == 'sell' && product == 'Silver 100 oz Bar'
-#       elements.sell_100oz_Silver_NewYork.click()
-#     elsif direction == 'sell' && product == 'Wholesale AAG 25,000 oz'
-#        elements.buy_Wholesale_Silver_Singapore.click()
-#     elsif direction == 'buy' && product == 'Platinum 1kg Bar'
-#       elements.buy_kg_Platinum_London.click()
-#     elsif direction == 'sell' && product == 'Platinum 1kg Bar'
-#       elements.sell_kg_Platinum_Sydney.click()
-#     elsif direction == 'buy' && product == 'Platinum 1kg Bar' #???
-#       elements.buy_kg_Platinum_Zurich.click()
-# end
-
-And('I place a {string} market order for that {string}') do |direction, hub|
-  elements = TradePage.new
-
-  if direction == 'buy' && hub == 'Dubai'
-    trade_metal = elements.buy_Gold_Dubai
-  elsif direction == 'sell' && hub == 'Dubai'
-    trade_metal = elements.sell_Gold_Dubai
-    elsif direction == 'buy' && hub == 'Hong Kong'
-      trade_metal = elements.buy_Gold_HongKong
-    elsif direction == 'sell' && hub == 'Hong Kong'
-      trade_metal = elements.sell_Gold_HongKong
-    elsif direction == 'buy' && hub == 'New York'
-      trade_metal = elements.buy_Silver_NewYork
-    elsif direction == 'sell' && hub == 'New York'
-      trade_metal = elements.sell_Silver_NewYork
-    elsif direction == 'buy' && hub == 'Singapore'
-      trade_metal = elements.buy_Silver_Singapore
-    elsif direction == 'sell' && hub == 'Singapore'
-      trade_metal = elements.sell_Silver_Singapore
-    elsif direction == 'buy' && hub == 'London'
-      trade_metal = elements.buy_latinum_London
-    elsif direction == 'sell' && hub == 'London'
-      trade_metal = elements.sell_Platinum_London
-    elsif direction == 'buy' && hub == 'Sydney'
-      trade_metal = elements.buy_Platinum_Sydney
-    elsif direction == 'sell' && hub == 'Sydney'
-      trade_metal = elements.sell_Platinum_Sydney
-    elsif direction == 'buy' && hub == 'Zuirch'
-      trade_metal = elements.buy_kg_Platinum_Zurich
-    elsif direction == 'sell' && hub == 'Zuirch'
-      trade_metal = elements.sell_Platinum_Zurich
-end
-trade_metal.click()
+  elements.market_order_button.click
+  elements.order_quantity_control.set(quantity)
+  elements.review_order_button.click
+  elements.submit_order_button.click
 end
 
 And(
-  'I set a quantity of {int}'
-) do |quantity|
-elements = TradePage.new
-elements.order_quantity_control.set(quantity)
-elements.confirm_button.click()
+  'I place a {string} market order in the selected contract for a quantity of {int} on behalf of a client {string}'
+) do |direction, quantity, client_data_set|
+  elements = TradePage.new
+
+  if direction == 'buy'
+    elements.buy_button.click
+  else
+    elements.sell_button.click
+  end
+
+  select_clients = YamlLoader.user_info(client_data_set)
+  client_hin = select_clients['hin']
+  client_data_set = client_hin
+
+  # Animations are the worst, this sleep awaits the panel to pop completely
+  sleep 1
+
+  elements.market_order_button.click
+  elements.select_client_filter(client_data_set)
+  elements.order_quantity_control.set(quantity)
+  elements.review_order_button.click
+  elements.submit_order_button.click
+end
+
+And(
+  'I place a {string} limit order in the selected contract for a quantity of {int} at a price {int} away from '\
+  'the top of the depth on behalf of a client {string}'
+) do |direction, quantity, distance, client_data_set|
+  elements = TradePage.new
+
+  if direction == 'buy'
+    elements.buy_button.click
+  else
+    elements.sell_button.click
+  end
+
+  select_clients = YamlLoader.user_info(client_data_set)
+  client_hin = select_clients['hin']
+  client_data_set = client_hin
+
+  # Animations are the worst, this sleep awaits the panel to pop completely
+  sleep 1
+
+  elements.limit_order_button.click
+  elements.select_client_filter(client_data_set)
+  elements.order_quantity_control.set(quantity)
+  order_price = elements.set_order_price(direction, distance)
+  elements.order_price_control.set(order_price)
+  elements.review_order_button.click
+  elements.submit_order_button.click
 end
 
 And(
@@ -176,6 +129,30 @@ And(
   elements.order_quantity_control.set(quantity)
   order_price = elements.set_order_price(direction, distance)
   elements.order_price_control.set(order_price)
+  elements.review_order_button.click
+  elements.submit_order_button.click
+end
+
+And(
+  'I place a {string} limit order in the selected contract for a quantity of {int} at a price {int} '\
+  'away from the top of the depth to be placed for a specific date and time'
+) do |direction, quantity, distance|
+  elements = TradePage.new
+
+  if direction == 'buy'
+    elements.buy_button.click
+  else
+    elements.sell_button.click
+  end
+
+  # Animations are the worst, this sleep awaits the panel to pop completely
+  sleep 1
+
+  elements.limit_order_button.click
+  elements.order_quantity_control.set(quantity)
+  order_price = elements.set_order_price(direction, distance)
+  elements.order_price_control.set(order_price)
+  elements.select_date_time_in_future
   elements.review_order_button.click
   elements.submit_order_button.click
 end
