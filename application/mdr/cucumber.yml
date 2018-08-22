@@ -1,0 +1,1 @@
+default: --no-source --format pretty --color --format html --out report<%= 'Default'%>.html --format rerun --out default_rerun.txt --format pretty -o default_features.log
