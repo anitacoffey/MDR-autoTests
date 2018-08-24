@@ -16,6 +16,7 @@ end
 metal_selector.click()
 end
 
+byebug
 And(
   'I select a contract in {string}'
 ) do |hub|

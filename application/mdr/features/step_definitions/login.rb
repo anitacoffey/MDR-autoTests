@@ -1,13 +1,11 @@
 Given('I login with username and password in the {string}') do |user_data|
   user = YamlLoader.user_info(user_data)
-
   page_elements = LoginPage.new
-  byebug
   page_elements.insert_username(user['username'])
   page_elements.insert_password(user['password'])
   page_elements.submit_login
 
-  Watir::Wait.until(timeout: 10) { $browser.text.downcase.include? 'trade' }
+  # Watir::Wait.until(timeout: 10) { $browser.text.downcase.include? 'trade' }
 
   puts "Logged in successfully as #{user['username']}"
 end

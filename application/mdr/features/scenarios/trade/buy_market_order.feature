@@ -12,5 +12,5 @@ Feature: As a MetalDesk user, I should be able to create a Buy Market Order.
 
     @pc
     Examples: PC
-      | data_set | hub   | metal | contract_id | direction | quantity | order_type |
-      | PC1      | Dubai | gold  | 233         | buy       | 3        | market     |
+      | data_set      | hub   | metal | contract_id | direction | quantity | order_type |
+      | PC1_TestData1 | Dubai | gold  | 233         | buy       | 3        | market     |
