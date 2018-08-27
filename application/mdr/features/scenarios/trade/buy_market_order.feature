@@ -5,12 +5,12 @@ Feature: As a MetalDesk user, I should be able to create a Buy Market Order.
     Then I login with username and password in the "<data_set>"
     And I select a metal type "<metal>"
     And I select a contract in "<hub>"
-    And I select a product type "<product>" and place a "<direction>" market order
+    And I place a "<direction>" market order
     And I set a quantity of <quantity>
     And I validate the matched order in the database with order details <contract_id>, "<direction>", <quantity>, "<order_type>" for the user "<data_set>"
     And I exit the browser
 
     @pc
     Examples: PC
-      | data_set      | hub   | metal | contract_id | direction | quantity | order_type |
-      | PC1_TestData1 | Dubai | gold  | 233         | buy       | 3        | market     |
+      | data_set      | hub       | metal  | contract_id | direction | quantity | order_type |
+      | PC1_TestData1 | Hong Kong | silver | 233         | buy       | 3        | market     |

@@ -1,9 +1,8 @@
 class LoginPage
   def initialize
-    @username_field = $browser.divs(class: 'field')[0].inputs(name: 'username')[0]
-    @password_field = $browser.divs(class: 'field')[1].inputs(name: 'password')[0]
+    @username_field = $browser.divs(class: 'field')[0].input(name: 'username')
+    @password_field = $browser.divs(class: 'field')[1].input(name: 'password')
     @login_button = $browser.divs(class: 'field')[3].buttons(type: 'submit')[0]
-    @logout_button = $browser.link(id: 'nav-panel-8')
   end
 
   def insert_username(username)

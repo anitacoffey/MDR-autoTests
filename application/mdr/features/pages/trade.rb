@@ -6,54 +6,24 @@ class TradePage
   #  @cash_transfers_button = $browser.divs(class: 'navbar-start')[0].as(class: 'navbar-item')[1].click()
   #  @settings_button = $browser.divs(class: 'navbar-start')[0].as(class: 'navbar-item')[2].click()
   #  @reports = $browser.divs(class: 'navbar-start')[0].as(class: 'navbar-item')[3].click()
-    @Trade_Gold = $browser.divs(class: 'is-centered')[0].as(href: 'Gold')
-    @Trade_Silver = $browser.divs(class: 'is-centered')[0].as(href: 'Silver')
-    @Trade_Platinum = $browser.divs(class: 'is-centered')[0].as(href: 'Platinum')
+    @Trade_Gold = $browser.divs(class: 'tabs is-centered')[0].link(text: 'Gold')
+    @Trade_Silver = $browser.divs(class: 'tabs is-centered')[0].link(text: 'Silver')
+    @Trade_Platinum = $browser.divs(class: 'tabs is-centered')[0].link(text: 'Platinum')
 
-  #  #buy dubai Gold 1kg bar 995 , sell dubai gold Wholesale AAU 10kg
-  #   @buy_kg995_Gold_Dubai = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/613/trade']")
-    # @sell_wholesale_Gold_Dubai = $browser.div(class: 'button is-danger').find_element(xPath: "//a[@href = 'trade/639/trade']")
-  #   #buy hong kong Swiss Gold 10oz,  sell Hong Kong swiss 100g Gold
-  #   @buy_Swiss_10oz_Gold_HongKong = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/271/trade']")
-  #   @sell_Swiss_100g_Gold_HongKong  = $browser.div(class: 'button is-danger').find_element(xPath: "//a[@href = 'trade/626/trade']")
-  #   #buy New York 1kg Silver, sell New York 100 oz Silver
-  #   @buy_1kg_Silver_NewYork = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/522/trade']")
-  #   @sell_100oz_Silver_NewYork  = $browser.div(class: 'button is-danger').find_element(xPath: "//a[@href = 'trade/526/trade']")
-  #   #buy Singapore Wholesale AAG 25000 oz Silver
-  #   @buy_Wholesale_Silver_Singapore = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/522/trade']")
-  #   #buy London 1Kg platinum
-  #   @buy_kg_Platinum_London = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/549/trade']")
-  #   #buy sell Syndey platinum
-  #   @sell_kg_Platinum_Sydney = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/324/trade']")
-  #   #buy sell Zurich platinum
-  #   @buy_kg_Platinum_Zurich = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/552/trade']")
-  #   #Select first buy / sell in the list
-  #   #Gold = dubai/ hongkong
-  #   #Silver = New York, Singapore
-  #   #Platinum = London, Sydney, Zurich
-  #   @buy_Gold_Dubai = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/613/trade']")
-  #   @sell_Gold_Dubai = $browser.div(class: 'button is-danger').find_element(xPath: "//a[@href = 'trade/613/trade']")
-  #   @buy_Gold_HongKong = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/264/trade']")
-  #   @sell_Gold_HongKong  = $browser.div(class: 'button is-danger').find_element(xPath: "//a[@href = 'trade/264/trade']")
-  #   @buy_Silver_NewYork = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/522/trade']")
-  #   @sell_Silver_NewYork  = $browser.div(class: 'button is-danger').find_element(xPath: "//a[@href = 'trade/522/trade']")
-  #   @buy_Silver_Singapore = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/251/trade']")
-  #   @sell_Silver_Singapore  = $browser.div(class: 'button is-danger').find_element(xPath: "//a[@href = 'trade/251/trade']")
-  #   @buy_Platinum_London = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/549/trade']")
-  #   @sell_Platinum_London = $browser.div(class: 'button is-danger').find_element(xPath: "//a[@href = 'trade/549/trade']")
-  #   @buy_Platinum_Sydney = $browser.div(class: 'button is-danger').find_element(xPath: "//a[@href = 'trade/324/trade']")
-  #   @sell_Platinum_Sydney = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/324/trade']")
-  #   @buy_Platinum_Zurich = $browser.div(class: 'button is-success').find_element(xPath: "//a[@href = 'trade/552/trade']")
-  #   @sell_Platinum_Zurich = $browser.div(class: 'button is-danger').find_element(xPath: "//a[@href = 'trade/552/trade']")
+    @buy_first_metal = $browser.as(class: 'button is-success')[0].href
+    @sell_first_metal = $browser.as(class: 'button is-danger')[0].href
 
+    @dubai_hub = $browser.divs(class: 'control')[1].option(value: "32")
+    @hongKong_hub = $browser.divs(class: 'control')[1].option(value: "23")
+    @london_hub = $browser.divs(class: 'control')[1].option(value: "28")
+    @newYork_hub = $browser.divs(class: 'control')[1].option(value: "27")
+    @singapore_hub = $browser.divs(class: 'control')[1].option(value: "22")
+    @sydney_hub = $browser.divs(class: 'control')[1].option(value: "25")
+    @zurich_hub = $browser.divs(class: 'control')[1].option(value: "29")
 
-  #   @dubai_hub = $browser.div(class: 'control').find_element(value: "32")
-  #   @hongKong_hub = $browser.div(class: 'control').find_element(value: "23")
-  #   @london_hub = $browser.div(class: 'control').find_element(value: "28")
-  #   @newYork_hub = $browser.div(class: 'control').find_element(value: "27")
-  #   @singapore_hub = $browser.div(class: 'control').find_element(value: "22")
-  #   @syndey_hub = $browser.div(class: 'control').find_element(value: "25")
-  #   @zurich_hub = $browser.div(class: 'control').find_element(value: "29")
+    @order_quantity = $browser.td(class: 'input')[0].input(name: 'amount')
+
+    @confirm_button = $browser.nuttons(class: 'button is-success')[1].buttons(text: 'Confirm')[0]
 
   #   @order_panel = $browser.div(class: 'column is-half')
   #   @market_order_button = @order_panel.button(text: 'Market')
@@ -81,6 +51,11 @@ class TradePage
     # @order_price_control = $browser.fieldset(class: 'orderForm__amountSpinner').text_field
     # @review_order_button = $browser.link(text: 'Review Order →')
     # @submit_order_button = $browser.link(text: 'Submit Order')
+  end
+
+  def insert_quantity(quantity)
+    @order_quantity.click()
+    @order_quantity.send_keys(quantity)
   end
 
   def top_sell_depth
@@ -128,6 +103,30 @@ class TradePage
   end
 
   attr_reader :order_price_control
+
+  attr_reader :Trade_Gold
+
+  attr_reader :Trade_Silver
+
+  attr_reader :Trade_Platinum
+
+  attr_reader :dubai_hub
+
+  attr_reader :hongKong_hub
+
+  attr_reader :london_hub
+
+  attr_reader :newYork_hub
+
+  attr_reader :singapore_hub
+
+  attr_reader :sydney_hub
+
+  attr_reader :zurich_hub
+
+  attr_reader :buy_first_metal
+
+  attr_reader :sell_first_metal
 
   attr_reader :left_panel_headers
 
