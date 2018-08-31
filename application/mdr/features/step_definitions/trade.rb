@@ -81,7 +81,6 @@ And(
   order_matches = Helper::Order.find_order_matches(order.id, direction)
   trade_transactions = order_matches.map do |order_match|
     Helper::Transaction.find_trade_transaction(order_match.id, account_uuid)
-    byebug
   end
 
   # recorded_quantity = trade_transactions.map(&:quantity)
